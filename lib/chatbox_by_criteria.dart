@@ -27,7 +27,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   ];
 
   // currently selected categories
-  final Set<String> _selectedCategories = {};
+  Set<String> _selectedCategories = {};
 
   void _sendUserMessage() {
     final text = _controller.text.trim();
@@ -77,7 +77,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     showDialog(
       context: context,
       barrierDismissible: true,
-      
+
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setPopupState) {
@@ -103,7 +103,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                         final double totalWidth = constraints.maxWidth;
                         const double spacing = 10;
                         final double itemWidth = (totalWidth - spacing) / 2;
-                  
+
                         return Wrap(
                           spacing: spacing,
                           runSpacing: spacing,
@@ -114,7 +114,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
 
                             return SizedBox(
                               width: itemWidth,
-                              
+
                               child: ElevatedButton(
                                 onPressed: () {
                                   // update popup state
@@ -155,6 +155,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                       onPressed: () {
                         _submitCategories();
                         Navigator.pop(context);
+                        _showRankingPopup();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF7FB480),
@@ -178,6 +179,88 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
         );
       },
     );
+  }
+
+  void _showRankingPopup() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setPopupState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              insetPadding: EdgeInsets.all(20),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                color: const Color(0xFFEFF8EF),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 10),
+                    const Text(
+                      "Please rank each category by weight by dragging each category",
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 15),
+
+                  Expanded(
+                    child: 
+                    ReorderableListView(
+                      onReorder: _onReorder,
+                      children: _selectedCategories.toList()
+                          .map(
+                            (item) => ListTile(
+                              key: ValueKey(item),
+                              title: Text(item),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                    const SizedBox(height: 15),
+
+                    ElevatedButton(
+                      onPressed: () {
+                        _submitCategories();
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF7FB480),
+                        foregroundColor: Colors.white,
+                        textStyle: const TextStyle(fontSize: 14),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 24,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text("Enter"),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    List<String> listCategories = _selectedCategories.toList();
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final String item = listCategories.removeAt(oldIndex);
+      listCategories.insert(newIndex, item);
+      _selectedCategories = listCategories.toSet();
+    });
   }
 
   @override
