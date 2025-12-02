@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';  
+import 'package:go_router/go_router.dart';
 import 'router.dart';
 
 class ChatboxByCriteria extends StatefulWidget {
@@ -16,11 +16,23 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   // each message has: from (user/bot) + text
   final List<Map<String, String>> _messages = [];
 
+  // list of categories for the popup
+  final List<String> _categories = [
+    "Academic Fit",
+    "Career Opportunities",
+    "Location & Environment",
+    "Cost & Financial Aid",
+    "Campus Life",
+    "Size & Reputation",
+  ];
+
+  // currently selected categories
+  final Set<String> _selectedCategories = {};
+
   void _sendUserMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
 
-    // store USER message
     setState(() {
       _messages.add({
         "from": "user",
@@ -30,8 +42,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
 
     _controller.clear();
     _scrollToBottom();
-
-    // OPTIONAL: simulate BOT reply
     _simulateBotResponse(text);
   }
 
@@ -56,6 +66,121 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
         );
       }
     });
+  }
+
+  // 🔹 what happens when you press Enter in the popup
+  void _submitCategories() {
+    if (_selectedCategories.isEmpty) return;
+
+    final text = "Selected categories: ${_selectedCategories.join(', ')}";
+
+    setState(() {
+      _messages.add({
+        "from": "user",
+        "text": text,
+      });
+    });
+
+    _scrollToBottom();
+  }
+
+  void _showCategoryPopup() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setPopupState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                color: const Color(0xFFEFF8EF),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final double totalWidth = constraints.maxWidth;
+                        const double spacing = 12;
+                        final double itemWidth = (totalWidth - spacing) / 2;
+
+                        return Wrap(
+                          spacing: spacing,
+                          runSpacing: spacing,
+                          children: _categories.map((cat) {
+                            final isSelected =
+                                _selectedCategories.contains(cat);
+
+                            return SizedBox(
+                              width: itemWidth,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // update popup state
+                                  setPopupState(() {
+                                    if (isSelected) {
+                                      _selectedCategories.remove(cat);
+                                    } else {
+                                      _selectedCategories.add(cat);
+                                    }
+                                  });
+                                  // optional: also update parent
+                                  setState(() {});
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isSelected
+                                      ? const Color(0xFF7FB480) // selected
+                                      : Colors.white, // normal
+                                  foregroundColor: isSelected
+                                      ? Colors.white
+                                      : const Color(0xFF7FB480),
+                                  textStyle: const TextStyle(fontSize: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: Text(
+                                  cat,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () {
+                        _submitCategories();
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF7FB480),
+                        foregroundColor: Colors.white,
+                        textStyle: const TextStyle(fontSize: 14),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 24,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text("Enter"),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -93,7 +218,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                     ),
                     decoration: BoxDecoration(
                       color: isUser
-                          ?  const Color(0xFFE53E3E)
+                          ? const Color(0xFFE53E3E)
                           : const Color(0xFF718096),
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(16),
@@ -106,7 +231,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                     ),
                     child: Text(
                       msg["text"]!,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                     ),
@@ -122,7 +247,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => context.push('/categories'),
+                  onTap: _showCategoryPopup,
                   child: Image.asset(
                     'assets/categories icon.png',
                     width: 40,
@@ -151,7 +276,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                 ElevatedButton(
                   onPressed: _sendUserMessage,
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Color(0xFF7fb480)
+                    foregroundColor: const Color(0xFF7FB480),
                   ),
                   child: const Text("Enter"),
                 ),
