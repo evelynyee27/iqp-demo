@@ -34,10 +34,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     if (text.isEmpty) return;
 
     setState(() {
-      _messages.add({
-        "from": "user",
-        "text": text,
-      });
+      _messages.add({"from": "user", "text": text});
     });
 
     _controller.clear();
@@ -49,10 +46,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   void _simulateBotResponse(String userInput) {
     Future.delayed(const Duration(milliseconds: 600), () {
       setState(() {
-        _messages.add({
-          "from": "bot",
-          "text": "Bot received: $userInput",
-        });
+        _messages.add({"from": "bot", "text": "Bot received: $userInput"});
       });
       _scrollToBottom();
     });
@@ -61,9 +55,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
-        _scrollController.jumpTo(
-          _scrollController.position.maxScrollExtent,
-        );
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       }
     });
   }
@@ -75,10 +67,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     final text = "Selected categories: ${_selectedCategories.join(', ')}";
 
     setState(() {
-      _messages.add({
-        "from": "user",
-        "text": text,
-      });
+      _messages.add({"from": "user", "text": text});
     });
 
     _scrollToBottom();
@@ -88,34 +77,44 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     showDialog(
       context: context,
       barrierDismissible: true,
+      
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setPopupState) {
             return Dialog(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(10),
               ),
+              insetPadding: EdgeInsets.all(20),
               child: Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(10),
                 color: const Color(0xFFEFF8EF),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    SizedBox(height: 10),
+                    const Text(
+                      "Please select each category you are interested in",
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 15),
                     LayoutBuilder(
                       builder: (context, constraints) {
                         final double totalWidth = constraints.maxWidth;
-                        const double spacing = 12;
+                        const double spacing = 10;
                         final double itemWidth = (totalWidth - spacing) / 2;
-
+                  
                         return Wrap(
                           spacing: spacing,
                           runSpacing: spacing,
                           children: _categories.map((cat) {
-                            final isSelected =
-                                _selectedCategories.contains(cat);
+                            final isSelected = _selectedCategories.contains(
+                              cat,
+                            );
 
                             return SizedBox(
                               width: itemWidth,
+                              
                               child: ElevatedButton(
                                 onPressed: () {
                                   // update popup state
@@ -138,22 +137,20 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                                       : const Color(0xFF7FB480),
                                   textStyle: const TextStyle(fontSize: 12),
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 8),
+                                    vertical: 6,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                 ),
-                                child: Text(
-                                  cat,
-                                  textAlign: TextAlign.center,
-                                ),
+                                child: Text(cat, textAlign: TextAlign.center),
                               ),
                             );
                           }).toList(),
                         );
                       },
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 15),
                     ElevatedButton(
                       onPressed: () {
                         _submitCategories();
@@ -193,9 +190,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Chatbox By Criteria"),
-      ),
+      appBar: AppBar(title: const Text("Chatbox By Criteria")),
       body: Column(
         children: [
           Expanded(
@@ -208,8 +203,9 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                 final isUser = msg["from"] == "user";
 
                 return Align(
-                  alignment:
-                      isUser ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment: isUser
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     padding: const EdgeInsets.symmetric(
@@ -223,17 +219,17 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(16),
                         topRight: const Radius.circular(16),
-                        bottomLeft:
-                            isUser ? const Radius.circular(16) : Radius.zero,
-                        bottomRight:
-                            isUser ? Radius.zero : const Radius.circular(16),
+                        bottomLeft: isUser
+                            ? const Radius.circular(16)
+                            : Radius.zero,
+                        bottomRight: isUser
+                            ? Radius.zero
+                            : const Radius.circular(16),
                       ),
                     ),
                     child: Text(
                       msg["text"]!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                 );
