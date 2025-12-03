@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/comparsion_chatbox.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,6 +21,10 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/categories',
       builder: (context, state) => const Categories(ranking: [],),
+    ),
+    GoRoute(
+      path: '/comparsionchatbox',
+      builder: (context, state) => const ComparsionChatbox(),
     ),
   ],
 );

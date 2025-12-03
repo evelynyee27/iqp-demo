@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'router.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+
+final String kGeoapifyKey =  dotenv.env['GEOAPIFY_KEY']?.toString() ?? '';
 
 class Categories extends StatefulWidget {
   final List<String> ranking;
@@ -17,6 +23,7 @@ class Categories extends StatefulWidget {
 
 class _CategoriesState extends State<Categories> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String? _communityType;
   String? _size;
   String? _learning;
@@ -27,19 +34,72 @@ class _CategoriesState extends State<Categories> {
   String? _clubs;
   String? _campusType;
   String? _sports;
-  
+
+  // 🔹 MULTIPLE locations
+  final TextEditingController _locationController = TextEditingController();
+  List<String> _locationSuggestions = [];
+  List<String> _selectedLocations = []; // store multiple locations
+  bool _isSearchingLocation = false;
+
+  @override
+  void dispose() {
+    _locationController.dispose();
+    super.dispose();
+  }
+
+  // Call Geoapify autocomplete API
+  Future<void> _searchLocation(String query) async {
+    if (query.trim().isEmpty) return;
+
+    setState(() {
+      _isSearchingLocation = true;
+      _locationSuggestions = [];
+    });
+
+    final encodedQuery = Uri.encodeComponent(query);
+    final url =
+        "https://api.geoapify.com/v1/geocode/autocomplete?text=$encodedQuery&format=json&apiKey=$kGeoapifyKey";
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        setState(() {
+          _locationSuggestions = (data["results"] as List)
+              .map((r) => r["formatted"] as String)
+              .toList();
+        });
+      } else {
+        setState(() {
+          _locationSuggestions = [];
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _locationSuggestions = [];
+      });
+    }
+
+    if (mounted) {
+      setState(() {
+        _isSearchingLocation = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Search by Criteria')),
-      body: Center(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // location & environment
                 if (widget.ranking.contains("Location & Environment")) ...[
@@ -63,6 +123,96 @@ class _CategoriesState extends State<Categories> {
                     onChanged: (value) {
                       setState(() => _communityType = value);
                     },
+                  ),
+                  const SizedBox(height: 15),
+                  // Add preferred locations (multiple)
+                  TextFormField(
+                    controller: _locationController,
+                    decoration: InputDecoration(
+                      labelText: 'Add preferred city / location',
+                      hintText: 'e.g. Providence, RI',
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: _isSearchingLocation
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.search),
+                        onPressed: _isSearchingLocation
+                            ? null
+                            : () {
+                                _searchLocation(_locationController.text);
+                              },
+                      ),
+                    ),
+                    onChanged: (value) {
+                      if (value.isEmpty) {
+                        setState(() {
+                          _locationSuggestions = [];
+                        });
+                      }
+                    },
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // Suggestions list from Geoapify
+                  if (_locationSuggestions.isNotEmpty)
+                    Container(
+                      constraints: const BoxConstraints(maxHeight: 200),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _locationSuggestions.length,
+                        itemBuilder: (context, index) {
+                          final suggestion = _locationSuggestions[index];
+                          return ListTile(
+                            dense: true,
+                            title: Text(
+                              suggestion,
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                if (!_selectedLocations
+                                    .contains(suggestion)) {
+                                  _selectedLocations.add(suggestion);
+                                }
+                                _locationController.clear();
+                                _locationSuggestions = [];
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+
+                  const SizedBox(height: 10),
+
+                  // Selected locations as chips
+                  if (_selectedLocations.isNotEmpty)
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: _selectedLocations.map((loc) {
+                        return Chip(
+                          label: Text(loc),
+                          deleteIcon: const Icon(Icons.close),
+                          onDeleted: () {
+                            setState(() {
+                              _selectedLocations.remove(loc);
+                            });
+                          },
+                        );
+                      }).toList(),
                   ),
                 ],
 
@@ -161,6 +311,8 @@ class _CategoriesState extends State<Categories> {
                       setState(() => _learning = value);
                     },
                   ),
+                  
+                  const SizedBox(height: 15),
 
                   DropdownButtonFormField<String>(
                     decoration: const InputDecoration(
@@ -255,6 +407,8 @@ class _CategoriesState extends State<Categories> {
                     },
                   ),
 
+                  const SizedBox(height: 15),
+
                   DropdownButtonFormField<String>(
                     decoration: const InputDecoration(
                       labelText: 'Housing Type',
@@ -273,6 +427,8 @@ class _CategoriesState extends State<Categories> {
                       setState(() => _housingType = value);
                     },
                   ),
+
+                  const SizedBox(height: 15),
 
                   DropdownButtonFormField<String>(
                     decoration: const InputDecoration(
@@ -293,6 +449,8 @@ class _CategoriesState extends State<Categories> {
                     },
                   ),
 
+                  const SizedBox(height: 15),
+
                   DropdownButtonFormField<String>(
                     decoration: const InputDecoration(
                       labelText: 'Campus Type',
@@ -311,6 +469,8 @@ class _CategoriesState extends State<Categories> {
                       setState(() => _campusType = value);
                     },
                   ),
+
+                  const SizedBox(height: 15),
 
                   DropdownButtonFormField<String>(
                     decoration: const InputDecoration(
@@ -332,6 +492,41 @@ class _CategoriesState extends State<Categories> {
                     },
                   ),
 
+                  const SizedBox(height: 5),
+                  Center(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          final selectedCriteria = {
+                            "communityType": _communityType,
+                            "selectedLocations": _selectedLocations,
+                            "size": _size,
+                            "learning": _learning,
+                            "majors": _majors,
+                            "programs": _programs,
+                            "housingReq": _housingReq,
+                            "housingType": _housingType,
+                            "clubs": _clubs,
+                            "campusType": _campusType,
+                            "sports": _sports,
+                          };
+
+                          Navigator.pop(context, selectedCriteria);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF7FB480),
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(fontSize: 14),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 24,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                        ),
+                        child: const Text("Enter"),
+                      ),
+                  )
                 ],
               ],
             ),

@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'router.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  final stopwatch = Stopwatch()..start();
+  await dotenv.load(fileName: ".env");
+  print("dotenv loaded in: ${stopwatch.elapsedMicroseconds} microseconds");
+
+  runApp(MyApp());
 }
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -44,16 +51,16 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 24),
 
             ElevatedButton(
               onPressed: () => context.push('/chatboxbycriteria'),
               child: const Text('Search by Criteria'),
+            ),
+            const SizedBox(height: 24),
+
+            ElevatedButton(
+              onPressed: () => context.push('/comparsionchatbox'),
+              child: const Text('Comparsion Chatbox'),
             ),
           ],
         ),

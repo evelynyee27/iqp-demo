@@ -206,6 +206,39 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   // currently selected categories
   List<String> _selectedCategories = [];
 
+  String formatCriteria(Map<String, dynamic> c) {
+    final buffer = StringBuffer();
+
+    buffer.writeln("📌 *Your selected criteria:*");
+    buffer.writeln("");
+
+    void addField(String label, dynamic value) {
+      if (value == null || value == "" || value == []) return;
+
+      if (value is List) {
+        if (value.isEmpty) return;
+        buffer.writeln("• $label: ${value.join(", ")}");
+      } else {
+        buffer.writeln("• $label: $value");
+      }
+    }
+
+    addField("Community type", c["communityType"]);
+    addField("Preferred Locations", c["selectedLocations"]);
+    addField("Size", c["size"]);
+    addField("Learning System", c["learning"]);
+    addField("Majors", c["majors"]);
+    addField("Programs", c["programs"]);
+    addField("Housing Requirement", c["housingReq"]);
+    addField("Housing Type", c["housingType"]);
+    addField("Clubs", c["clubs"]);
+    addField("Campus Type", c["campusType"]);
+    addField("Sports", c["sports"]);
+
+    return buffer.toString().trim();
+  }
+
+
   void _sendUserMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
@@ -220,11 +253,11 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
 
     _controller.clear();
     _scrollToBottom();
-    _simulateBotResponse(text);
+    _simulateBotResponse();
   }
 
-  // fake bot reply – now also sends the school results block
-  void _simulateBotResponse(String userInput) {
+  // fake bot reply – sends the school results block
+  void _simulateBotResponse() {
     Future.delayed(const Duration(milliseconds: 600), () {
       setState(() {
         // (Optional) simple bot text reply
@@ -431,17 +464,32 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                     ),
                     const SizedBox(height: 15),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         setState(() {
                           _selectedCategories = List.from(ranking);
                         });
-                        Navigator.of(context).push(
+                        Navigator.pop(context);
+                        final result = await Navigator.push(
+                          context,
                           MaterialPageRoute(
-                            builder: (context) => Categories(ranking: _selectedCategories),
+                            builder: (_) => Categories(ranking: _selectedCategories),
                           ),
                         );
 
-                        context.push('/categories');
+                        if (result != null) {
+                          setState(() {
+                            _messages.add({
+                              "from": "user",
+                              "type": "text",
+                              "text": formatCriteria(result),
+                            });
+                          });
+
+                          _scrollToBottom();
+                          _simulateBotResponse();
+                        }
+
+                        // context.push('/categories');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF7FB480),
