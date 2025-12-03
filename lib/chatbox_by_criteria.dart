@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'router.dart';
+import 'categories.dart';
 
 class ChatboxByCriteria extends StatefulWidget {
   const ChatboxByCriteria({super.key});
 
   @override
   State<ChatboxByCriteria> createState() => _ChatboxByCriteriaState();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: router
-    );
+    return MaterialApp.router(routerConfig: router);
   }
 }
 
@@ -71,7 +71,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
       (a, b) => _categories.indexOf(a).compareTo(_categories.indexOf(b)),
     );
   }
-
 
   // 🔹 what happens when you press Enter in the popup
   // void _submitCategories() {
@@ -238,9 +237,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
 
                           return ListTile(
                             key: ValueKey(item),
-                            leading: CircleAvatar(
-                              child: Text('${index + 1}'),
-                            ),
+                            leading: CircleAvatar(child: Text('${index + 1}')),
                             title: Text(item),
                             trailing: ReorderableDragStartListener(
                               index: index,
@@ -257,7 +254,12 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                         setState(() {
                           _selectedCategories = List.from(ranking);
                         });
-                        Navigator.pop(context);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => Categories(ranking: _selectedCategories),
+                          ),
+                        );
+
                         context.push('/categories');
                       },
                       style: ElevatedButton.styleFrom(
