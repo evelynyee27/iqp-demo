@@ -7,6 +7,12 @@ class ChatboxByCriteria extends StatefulWidget {
 
   @override
   State<ChatboxByCriteria> createState() => _ChatboxByCriteriaState();
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: router
+    );
+  }
 }
 
 class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
@@ -20,14 +26,14 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   final List<String> _categories = [
     "Academic Fit",
     "Career Opportunities",
+    "Campus Life",
     "Location & Environment",
     "Cost & Financial Aid",
-    "Campus Life",
     "Size & Reputation",
   ];
 
   // currently selected categories
-  Set<String> _selectedCategories = {};
+  List<String> _selectedCategories = [];
 
   void _sendUserMessage() {
     final text = _controller.text.trim();
@@ -60,18 +66,25 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     });
   }
 
-  // 🔹 what happens when you press Enter in the popup
-  void _submitCategories() {
-    if (_selectedCategories.isEmpty) return;
-
-    final text = "Selected categories: ${_selectedCategories.join(', ')}";
-
-    setState(() {
-      _messages.add({"from": "user", "text": text});
-    });
-
-    _scrollToBottom();
+  void _sortToDefault() {
+    _selectedCategories.sort(
+      (a, b) => _categories.indexOf(a).compareTo(_categories.indexOf(b)),
+    );
   }
+
+
+  // 🔹 what happens when you press Enter in the popup
+  // void _submitCategories() {
+  //   if (_selectedCategories.isEmpty) return;
+
+  //   final text = "Selected categories: ${_selectedCategories.join(', ')}";
+
+  //   setState(() {
+  //     _messages.add({"from": "user", "text": text});
+  //   });
+
+  //   _scrollToBottom();
+  // }
 
   void _showCategoryPopup() {
     showDialog(
@@ -153,7 +166,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                     const SizedBox(height: 15),
                     ElevatedButton(
                       onPressed: () {
-                        _submitCategories();
+                        _sortToDefault();
                         Navigator.pop(context);
                         _showRankingPopup();
                       },
@@ -169,7 +182,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                           borderRadius: BorderRadius.circular(24),
                         ),
                       ),
-                      child: const Text("Enter"),
+                      child: const Text("Next"),
                     ),
                   ],
                 ),
@@ -186,6 +199,8 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
       context: context,
       barrierDismissible: true,
       builder: (context) {
+        List<String> ranking = List.from(_selectedCategories);
+
         return StatefulBuilder(
           builder: (context, setPopupState) {
             return Dialog(
@@ -206,26 +221,44 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                     ),
                     SizedBox(height: 15),
 
-                  Expanded(
-                    child: 
-                    ReorderableListView(
-                      onReorder: _onReorder,
-                      children: _selectedCategories.toList()
-                          .map(
-                            (item) => ListTile(
-                              key: ValueKey(item),
-                              title: Text(item),
+                    SizedBox(
+                      height: 300,
+                      child: ReorderableListView.builder(
+                        buildDefaultDragHandles: false,
+                        itemCount: ranking.length,
+                        onReorder: (oldIndex, newIndex) {
+                          setPopupState(() {
+                            if (newIndex > oldIndex) newIndex -= 1;
+                            final item = ranking.removeAt(oldIndex);
+                            ranking.insert(newIndex, item);
+                          });
+                        },
+                        itemBuilder: (context, index) {
+                          final item = ranking[index];
+
+                          return ListTile(
+                            key: ValueKey(item),
+                            leading: CircleAvatar(
+                              child: Text('${index + 1}'),
                             ),
-                          )
-                          .toList(),
+                            title: Text(item),
+                            trailing: ReorderableDragStartListener(
+                              index: index,
+                              child: const Icon(Icons.drag_handle),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
                     const SizedBox(height: 15),
 
                     ElevatedButton(
                       onPressed: () {
-                        _submitCategories();
+                        setState(() {
+                          _selectedCategories = List.from(ranking);
+                        });
                         Navigator.pop(context);
+                        context.push('/categories');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF7FB480),
@@ -249,18 +282,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
         );
       },
     );
-  }
-
-  void _onReorder(int oldIndex, int newIndex) {
-    List<String> listCategories = _selectedCategories.toList();
-    setState(() {
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-      final String item = listCategories.removeAt(oldIndex);
-      listCategories.insert(newIndex, item);
-      _selectedCategories = listCategories.toSet();
-    });
   }
 
   @override
