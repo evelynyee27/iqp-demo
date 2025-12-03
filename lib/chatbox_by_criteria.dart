@@ -15,14 +15,152 @@ class ChatboxByCriteria extends StatefulWidget {
   }
 }
 
+class School {
+  final String name;
+  final String info;
+
+  School({
+    required this.name,
+    required this.info,
+  });
+
+  String get logoAsset => 'assets/School logo/$name.png';
+}
+
+class SchoolResultsGrid extends StatefulWidget {
+  const SchoolResultsGrid({super.key, required this.schools});
+
+  final List<School> schools;
+
+  @override
+  State<SchoolResultsGrid> createState() => _SchoolResultsGridState();
+}
+
+class _SchoolResultsGridState extends State<SchoolResultsGrid> {
+  int? _openIndex; // which card is expanded
+
+  @override
+  Widget build(BuildContext context) {
+    const double spacing = 12;
+
+    return Container(
+      color: const Color(0xFF718096), // background
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        children: _buildRows(spacing),
+      ),
+    );
+  }
+
+  List<Widget> _buildRows(double spacing) {
+    final List<Widget> rows = [];
+
+    for (int i = 0; i < widget.schools.length; i += 2) {
+      final int leftIndex = i;
+      final int? rightIndex =
+          (i + 1 < widget.schools.length) ? i + 1 : null;
+
+      // ROW of up to 2 cards
+      rows.add(
+        Row(
+          children: [
+            Expanded(child: _buildCard(leftIndex)),
+            if (rightIndex != null) ...[
+              SizedBox(width: spacing),
+              Expanded(child: _buildCard(rightIndex)),
+            ],
+          ],
+        ),
+      );
+
+      // if either card in this row is open, show full-width explanation under this row
+      if (_openIndex != null &&
+          (_openIndex == leftIndex || _openIndex == rightIndex)) {
+        rows.add(const SizedBox(height: 8));
+        rows.add(
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              widget.schools[_openIndex!].info,
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
+        );
+      }
+
+      rows.add(SizedBox(height: spacing));
+    }
+
+    return rows;
+  }
+
+  Widget _buildCard(int index) {
+    final school = widget.schools[index];
+    final isOpen = _openIndex == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _openIndex = isOpen ? null : index;
+        });
+      },
+      child: Card(
+        color: const Color(0xFFECE2D0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                school.logoAsset,
+                height: 70,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      school.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Icon(
+                    isOpen
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-  // each message has: from (user/bot) + text
-  final List<Map<String, String>> _messages = [];
+  final List<Map<String, dynamic>> _messages = [];
 
-  // list of categories for the popup
   final List<String> _categories = [
     "Academic Fit",
     "Career Opportunities",
@@ -30,6 +168,39 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     "Location & Environment",
     "Cost & Financial Aid",
     "Size & Reputation",
+  ];
+
+  final List<School> _schoolList = [
+    School(
+      name: "Ashford University",
+      info:
+          "Explanation of why Ashford University fits the user's criteria......\n\n\n\n\n\n\n",
+    ),
+    School(
+      name: "Crestmont University",
+      info:
+          "Explanation of why Crestmont University fits the user's criteria......\n\n\n\n\n\n\n",
+    ),
+    School(
+      name: "Fairview University",
+      info:
+          "Explanation of why Fairview University fits the user's criteria......\n\n\n\n\n\n\n",
+    ),
+    School(
+      name: "Sutton College",
+      info:
+          "Explanation of why Sutton College fits the user's criteria......\n\n\n\n\n\n\n",
+    ),
+    School(
+      name: "Valleyview University",
+      info:
+          "Explanation of why Valleyview University fits the user's criteria......\n\n\n\n\n\n\n",
+    ),
+    School(
+      name: "Wakefield University",
+      info:
+          "Explanation of why Wakefield University fits the user's criteria......\n\n\n\n\n\n\n",
+    ),
   ];
 
   // currently selected categories
@@ -40,7 +211,11 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     if (text.isEmpty) return;
 
     setState(() {
-      _messages.add({"from": "user", "text": text});
+      _messages.add({
+        "from": "user",
+        "type": "text",
+        "text": text,
+      });
     });
 
     _controller.clear();
@@ -48,11 +223,21 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     _simulateBotResponse(text);
   }
 
-  // fake bot reply
+  // fake bot reply – now also sends the school results block
   void _simulateBotResponse(String userInput) {
     Future.delayed(const Duration(milliseconds: 600), () {
       setState(() {
-        _messages.add({"from": "bot", "text": "Bot received: $userInput"});
+        // (Optional) simple bot text reply
+        _messages.add({
+          "from": "bot",
+          "type": "text",
+          "text": "Here are some schools that might fit you:",
+        });
+
+        _messages.add({
+          "from": "bot",
+          "type": "schools",
+        });
       });
       _scrollToBottom();
     });
@@ -61,7 +246,8 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        _scrollController
+            .jumpTo(_scrollController.position.maxScrollExtent);
       }
     });
   }
@@ -72,25 +258,10 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     );
   }
 
-
-  // 🔹 what happens when you press Enter in the popup
-  // void _submitCategories() {
-  //   if (_selectedCategories.isEmpty) return;
-
-  //   final text = "Selected categories: ${_selectedCategories.join(', ')}";
-
-  //   setState(() {
-  //     _messages.add({"from": "user", "text": text});
-  //   });
-
-  //   _scrollToBottom();
-  // }
-
   void _showCategoryPopup() {
     showDialog(
       context: context,
       barrierDismissible: true,
-
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setPopupState) {
@@ -121,13 +292,10 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                           spacing: spacing,
                           runSpacing: spacing,
                           children: _categories.map((cat) {
-                            final isSelected = _selectedCategories.contains(
-                              cat,
-                            );
+                            final isSelected = _selectedCategories.contains(cat);
 
                             return SizedBox(
                               width: itemWidth,
-
                               child: ElevatedButton(
                                 onPressed: () {
                                   // update popup state
@@ -220,7 +388,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 15),
-
                     SizedBox(
                       height: 300,
                       child: ReorderableListView.builder(
@@ -251,7 +418,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                       ),
                     ),
                     const SizedBox(height: 15),
-
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
@@ -305,7 +471,17 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
               itemBuilder: (context, index) {
                 final msg = _messages[index];
                 final isUser = msg["from"] == "user";
+                final type = msg["type"] ?? "text";
+                if (type == "schools") {
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: SchoolResultsGrid(
+                      schools: _schoolList,
+                    ),
+                  );
+                }
 
+                // normal text bubble
                 return Align(
                   alignment: isUser
                       ? Alignment.centerRight

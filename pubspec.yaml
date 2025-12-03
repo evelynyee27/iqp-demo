@@ -66,6 +66,12 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/categories icon.png
+    - assets/School logo/Ashford University.png
+    - assets/School logo/Crestmont University.png
+    - assets/School logo/Fairview University.png
+    - assets/School logo/Sutton College.png
+    - assets/School logo/Valleyview University.png
+    - assets/School logo/Wakefield University.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
