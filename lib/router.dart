@@ -19,7 +19,7 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/categories',
-      builder: (context, state) => const Categories(),
+      builder: (context, state) => const Categories(ranking: [],),
     ),
   ],
 );
