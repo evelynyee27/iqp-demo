@@ -4,8 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
-final String kGeoapifyKey =  dotenv.env['GEOAPIFY_KEY']?.toString() ?? '';
+final String kGeoapifyKey = dotenv.env['GEOAPIFY_KEY']?.toString() ?? '';
 
 class Categories extends StatefulWidget {
   final List<String> ranking;
@@ -182,8 +181,7 @@ class _CategoriesState extends State<Categories> {
                             ),
                             onTap: () {
                               setState(() {
-                                if (!_selectedLocations
-                                    .contains(suggestion)) {
+                                if (!_selectedLocations.contains(suggestion)) {
                                   _selectedLocations.add(suggestion);
                                 }
                                 _locationController.clear();
@@ -213,7 +211,7 @@ class _CategoriesState extends State<Categories> {
                           },
                         );
                       }).toList(),
-                  ),
+                    ),
                 ],
 
                 // size & reputation
@@ -311,7 +309,7 @@ class _CategoriesState extends State<Categories> {
                       setState(() => _learning = value);
                     },
                   ),
-                  
+
                   const SizedBox(height: 15),
 
                   DropdownButtonFormField<String>(
@@ -436,14 +434,21 @@ class _CategoriesState extends State<Categories> {
                       border: OutlineInputBorder(),
                     ),
                     initialValue: _clubs,
-                    items: ['Arts/Music', 'Community Service', 'Newspaper', 'Honor Society', 'Student Government']
-                        .map(
-                          (option) => DropdownMenuItem(
-                            value: option,
-                            child: Text(option),
-                          ),
-                        )
-                        .toList(),
+                    items:
+                        [
+                              'Arts/Music',
+                              'Community Service',
+                              'Newspaper',
+                              'Honor Society',
+                              'Student Government',
+                            ]
+                            .map(
+                              (option) => DropdownMenuItem(
+                                value: option,
+                                child: Text(option),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) {
                       setState(() => _clubs = value);
                     },
@@ -478,56 +483,62 @@ class _CategoriesState extends State<Categories> {
                       border: OutlineInputBorder(),
                     ),
                     initialValue: _sports,
-                    items: ['Basketball (Varsity)', 'Badminton (Varsity)', 'Basketball Club', 'Badminton Club', 'Football Club'
-                    ]
-                        .map(
-                          (option) => DropdownMenuItem(
-                            value: option,
-                            child: Text(option),
-                          ),
-                        )
-                        .toList(),
+                    items:
+                        [
+                              'Basketball (Varsity)',
+                              'Badminton (Varsity)',
+                              'Basketball Club',
+                              'Badminton Club',
+                              'Football Club',
+                            ]
+                            .map(
+                              (option) => DropdownMenuItem(
+                                value: option,
+                                child: Text(option),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) {
                       setState(() => _sports = value);
                     },
                   ),
-
+                ],
                   const SizedBox(height: 5),
+
                   Center(
                     child: ElevatedButton(
-                        onPressed: () {
-                          final selectedCriteria = {
-                            "communityType": _communityType,
-                            "selectedLocations": _selectedLocations,
-                            "size": _size,
-                            "learning": _learning,
-                            "majors": _majors,
-                            "programs": _programs,
-                            "housingReq": _housingReq,
-                            "housingType": _housingType,
-                            "clubs": _clubs,
-                            "campusType": _campusType,
-                            "sports": _sports,
-                          };
+                      onPressed: () {
+                        final selectedCriteria = {
+                          "communityType": _communityType,
+                          "selectedLocations": _selectedLocations,
+                          "size": _size,
+                          "learning": _learning,
+                          "majors": _majors,
+                          "programs": _programs,
+                          "housingReq": _housingReq,
+                          "housingType": _housingType,
+                          "clubs": _clubs,
+                          "campusType": _campusType,
+                          "sports": _sports,
+                        };
 
-                          Navigator.pop(context, selectedCriteria);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF7FB480),
-                          foregroundColor: Colors.white,
-                          textStyle: const TextStyle(fontSize: 14),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 24,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
+                        Navigator.pop(context, selectedCriteria);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF7FB480),
+                        foregroundColor: Colors.white,
+                        textStyle: const TextStyle(fontSize: 14),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 24,
                         ),
-                        child: const Text("Enter"),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
                       ),
-                  )
-                ],
+                      child: const Text("Enter"),
+                    ),
+                  ),
               ],
             ),
           ),
