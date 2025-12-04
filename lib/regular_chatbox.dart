@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';  
 import 'router.dart';
 
-class ComparsionChatbox extends StatefulWidget {
-  final List<String> listOfSchool;
-  final bool isTchart;
-  const ComparsionChatbox({super.key, required this.listOfSchool, required this.isTchart});
+class RegularChatbox extends StatefulWidget {
+  final String schoolName;
+  const RegularChatbox({super.key, required this.schoolName});
 
   @override
-  State<ComparsionChatbox> createState() => _ComparsionChatboxState();
+  State<RegularChatbox> createState() => _RegularChatboxState();
 }
 
-class _ComparsionChatboxState extends State<ComparsionChatbox> {
+class _RegularChatboxState extends State<RegularChatbox> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
@@ -43,7 +42,7 @@ class _ComparsionChatboxState extends State<ComparsionChatbox> {
       setState(() {
         _messages.add({
           "from": "bot",
-          "text": "Bot received: $userInput",
+          "text": "Answer the question the user has regard ${widget.schoolName}.....\n\n\n\n\n\n",
         });
       });
       _scrollToBottom();
@@ -71,7 +70,7 @@ class _ComparsionChatboxState extends State<ComparsionChatbox> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Comparsion Chatbox"),
+        title: Text(widget.schoolName),
       ),
       body: Column(
         children: [

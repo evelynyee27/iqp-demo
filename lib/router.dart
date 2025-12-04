@@ -1,5 +1,6 @@
 import 'package:flutter_application_1/comparsion_chatbox.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/regular_chatbox.dart';
 import 'package:go_router/go_router.dart';
 
 import 'main.dart';
@@ -24,7 +25,11 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/comparsionchatbox',
-      builder: (context, state) => const ComparsionChatbox(),
+      builder: (context, state) => const ComparsionChatbox(listOfSchool: [], isTchart: false,),
+    ),
+    GoRoute(
+      path: '/regularchatbox',
+      builder: (context, state) => const RegularChatbox(schoolName: ""),
     ),
   ],
 );
