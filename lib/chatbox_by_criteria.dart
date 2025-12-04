@@ -112,22 +112,20 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
       child: Card(
         color: const Color(0xFFECE2D0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
+
         ),
         elevation: 2,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(5.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(
-                school.logoAsset,
-                height: 70,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
+              Image.asset(school.logoAsset, height: 75, fit: BoxFit.contain),
+              const SizedBox(height: 5),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Text(
@@ -136,7 +134,8 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
-                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.visible,
                     ),
                   ),
                   Icon(
