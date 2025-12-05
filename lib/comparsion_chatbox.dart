@@ -84,12 +84,15 @@ class _ComparsionChatboxState extends State<ComparsionChatbox> {
   void _simulateBotResponse(String userInput) {
     Future.delayed(const Duration(milliseconds: 600), () {
       setState(() {
-        if(widget.isTchart){
+        if (widget.isTchart) {
           _messages.add({
             "from": "bot",
-            "text": "Bot received: $userInput",
+            "widget": TwoSchoolInfoBubble(
+              school1: selectedSchools[0],
+              school2: selectedSchools[1],
+            ),
           });
-        }else{
+        } else {
           _messages.add({
             "from": "bot",
             "widget": SchoolInfoBubble(schools: selectedSchools),
@@ -219,9 +222,192 @@ class _ComparsionChatboxState extends State<ComparsionChatbox> {
   }
 }
 
+class TwoSchoolInfoBubble extends StatefulWidget {
+  final School school1;
+  final School school2;
+  const TwoSchoolInfoBubble({
+    super.key,
+    required this.school1,
+    required this.school2,
+  });
+
+  @override
+  State<TwoSchoolInfoBubble> createState() => _TwoSchoolInfoBubbleState();
+}
+
+class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
+  // School school1 = widget.school1;
+  // School school2 = widget.school2;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      decoration: const BoxDecoration(
+        color: Color(0xFF718096), // same as bot text bubble
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+          bottomLeft: Radius.zero,
+          bottomRight: Radius.circular(16),
+        ),
+      ),
+
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // school 1
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      widget.school1.logoAsset,
+                      width: 50,
+                      height: 50,
+                    ),
+                    Text(
+                      widget.school1.name,
+                      style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
+                    ),
+                    Divider(thickness: 1, color: Colors.black),
+                    SizedBox(height: 5),
+                    Text(
+                      'Brief description of the school',
+                      style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
+                    ),
+                    SizedBox(height: 5),
+                    Divider(thickness: 1, color: Colors.black),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 25,
+                            alignment: Alignment.center,
+                            child: Text('Category 1'),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Divider(thickness: 1, color: Colors.black),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 25,
+                            alignment: Alignment.center,
+                            child: Text('Category 2'),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Divider(thickness: 1, color: Colors.black),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 25,
+                            alignment: Alignment.center,
+                            child: Text('Category 3'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 10),
+              // school 2
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      widget.school2.logoAsset,
+                      width: 50,
+                      height: 50,
+                    ),
+                    Text(
+                      widget.school2.name,
+                      style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
+                    ),
+                    Divider(thickness: 1, color: Colors.black),
+                    SizedBox(height: 5),
+                    Text(
+                      'Brief description of the school',
+                      style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
+                    ),
+                    SizedBox(height: 5),
+                    Divider(thickness: 1, color: Colors.black),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 25,
+                            alignment: Alignment.center,
+                            child: Text('Category 1'),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Divider(thickness: 1, color: Colors.black),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 25,
+                            alignment: Alignment.center,
+                            child: Text('Category 2'),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Divider(thickness: 1, color: Colors.black),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 25,
+                            alignment: Alignment.center,
+                            child: Text('Category 3'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          Row(
+            children: [
+              Divider(thickness: 1, color: Colors.black),
+
+              Text('\nSummary of differences between schools\n'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class SchoolInfoBubble extends StatefulWidget {
   final List<School> schools;
-
   const SchoolInfoBubble({super.key, required this.schools});
 
   @override
@@ -289,7 +475,10 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
                   decoration: BoxDecoration(
                     color: const Color(0xFFECE2D0),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Color.fromRGBO(27, 77, 62, 1), width: 1),
+                    border: Border.all(
+                      color: Color.fromRGBO(27, 77, 62, 1),
+                      width: 1,
+                    ),
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<School>(
@@ -326,7 +515,9 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
                               Expanded(
                                 child: Text(
                                   s.name,
-                                  style: const TextStyle(color: Color.fromRGBO(27, 77, 62, 1)),
+                                  style: const TextStyle(
+                                    color: Color.fromRGBO(27, 77, 62, 1),
+                                  ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -392,13 +583,16 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color:  Color(0xFFECE2D0),
+                    color: Color(0xFFECE2D0),
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   _currentSchool.info,
-                  style: const TextStyle(fontSize: 16, color: Color(0xFFECE2D0)),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFFECE2D0),
+                  ),
                 ),
               ],
             ),
