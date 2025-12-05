@@ -34,7 +34,7 @@ class _CategoriesState extends State<Categories> {
   String? _campusType;
   String? _sports;
 
-  // 🔹 MULTIPLE locations
+  // MULTIPLE locations
   final TextEditingController _locationController = TextEditingController();
   List<String> _locationSuggestions = [];
   List<String> _selectedLocations = []; // store multiple locations

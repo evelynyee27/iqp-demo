@@ -325,6 +325,18 @@ class _MyHomePageState extends State<MyHomePage> {
                             );
                             return;
                           }
+                        }else{
+                          if (selectedSchoolNames.length < 2) {
+                            HapticFeedback.mediumImpact();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Please select at least 2 schools to compare.',
+                                ),
+                              ),
+                            );
+                            return;
+                          }
                         }
                         await Navigator.push(
                           context,
