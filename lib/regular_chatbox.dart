@@ -31,8 +31,6 @@ class _RegularChatboxState extends State<RegularChatbox> {
 
     _controller.clear();
     _scrollToBottom();
-
-    // OPTIONAL: simulate BOT reply
     _simulateBotResponse(text);
   }
 

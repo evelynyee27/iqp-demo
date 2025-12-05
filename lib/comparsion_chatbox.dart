@@ -261,8 +261,6 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
           value: selected,
           isExpanded: true,
           dropdownColor: const Color(0xFFECE2D0),
-
-          // IMPORTANT: let the item be taller than 48px
           itemHeight: null,
 
           icon: const Icon(
@@ -270,20 +268,19 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
             color: Color.fromRGBO(27, 77, 62, 1),
           ),
 
-          // what the closed dropdown looks like
           selectedItemBuilder: (context) {
             return widget.schools.map((s) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // logo on top
+                  // logo
                   Image.asset(
                     s.logoAsset,
                     width: 32,
                     height: 32,
                   ),
                   const SizedBox(height: 4),
-                  // name; arrow sits to the right (provided by `icon`)
+                  // school name and arrow to the right of the school name
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -532,7 +529,7 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
       margin: const EdgeInsets.symmetric(vertical: 5),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
       decoration: const BoxDecoration(
-        color: Color(0xFF718096), // same as bot text bubble
+        color: Color(0xFF718096), 
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
@@ -543,11 +540,10 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top row: Prev | [logo dropdown] | Next
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // PREV
+              // previous button
               ElevatedButton(
                 onPressed: _currentIndex > 0 ? _goPrev : null,
                 style: ElevatedButton.styleFrom(
@@ -558,7 +554,7 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
                 child: const Text("← Prev"),
               ),
 
-              // DROPDOWN WITH LOGO + ARROW INSIDE A BOX
+              // logo and a dropdown arrow to the right
               SizedBox(
                 width: 140,
                 child: Container(
@@ -583,8 +579,6 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
                       ),
                       dropdownColor: const Color(0xFFECE2D0),
                       isExpanded: true,
-
-                      // What the selected item looks like (logo only)
                       selectedItemBuilder: (context) {
                         return widget.schools.map((s) {
                           return Align(
@@ -636,7 +630,7 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
                 ),
               ),
 
-              // NEXT
+              // next button
               ElevatedButton(
                 onPressed: _currentIndex < widget.schools.length - 1
                     ? _goNext

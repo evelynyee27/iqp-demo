@@ -446,7 +446,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           );
 
                           if (!alreadySelected) {
-                            // Trying to select a new school
+                            // try to select a new school
                             if (toggled && selectedSchoolNames.length >= 2) {
                               // Compare mode is ON and already have 2
                               HapticFeedback.mediumImpact();
@@ -457,7 +457,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 ),
                               );
-                              return; // do NOT add this school
+                              return;
                             }
 
                             selectedSchoolNames.add(key);

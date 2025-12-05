@@ -60,7 +60,7 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
       final int? rightIndex =
           (i + 1 < widget.schools.length) ? i + 1 : null;
 
-      // ROW of up to 2 cards
+      // up to 2 cards per row
       rows.add(
         Row(
           children: [
@@ -208,7 +208,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   String formatCriteria(Map<String, dynamic> c) {
     final buffer = StringBuffer();
 
-    buffer.writeln("📌 *Your selected criteria:*");
+    buffer.writeln("Your selected criteria:");
     buffer.writeln("");
 
     void addField(String label, dynamic value) {
@@ -259,7 +259,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   void _simulateBotResponse() {
     Future.delayed(const Duration(milliseconds: 600), () {
       setState(() {
-        // (Optional) simple bot text reply
         _messages.add({
           "from": "bot",
           "type": "text",
@@ -289,20 +288,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
       (a, b) => _categories.indexOf(a).compareTo(_categories.indexOf(b)),
     );
   }
-
-
-  // 🔹 what happens when you press Enter in the popup
-  // void _submitCategories() {
-  //   if (_selectedCategories.isEmpty) return;
-
-  //   final text = "Selected categories: ${_selectedCategories.join(', ')}";
-
-  //   setState(() {
-  //     _messages.add({"from": "user", "text": text});
-  //   });
-
-  //   _scrollToBottom();
-  // }
 
   void _showCategoryPopup() {
     showDialog(
@@ -352,7 +337,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                                       _selectedCategories.add(cat);
                                     }
                                   });
-                                  // optional: also update parent
                                   setState(() {});
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -487,8 +471,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                           _scrollToBottom();
                           _simulateBotResponse();
                         }
-
-                        // context.push('/categories');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF7FB480),
