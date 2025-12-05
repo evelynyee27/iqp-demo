@@ -20,7 +20,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       routerConfig: router,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(27, 77, 62, 1)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color.fromRGBO(27, 77, 62, 1),
+        ),
       ),
     );
   }
@@ -114,10 +116,7 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
       },
       child: Card(
         color: const Color.fromRGBO(255, 255, 255, 1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         elevation: 2,
         child: Padding(
           padding: const EdgeInsets.all(5.0),
@@ -273,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromRGBO(127, 180, 128, 1),
                       foregroundColor: Colors.white,
-                      side: BorderSide(color: Colors.white)
+                      side: BorderSide(color: Colors.white),
                     ),
                     child: const Text(
                       'Search by Criteria',
@@ -299,7 +298,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromRGBO(127, 180, 128, 1),
                       foregroundColor: Colors.white,
-                      side: BorderSide(color: Colors.white)
+                      side: BorderSide(color: Colors.white),
                     ),
                     child: Text(select, style: TextStyle(fontSize: 12)),
                   ),
@@ -339,7 +338,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromRGBO(172, 228, 170, 1),
                         foregroundColor: Colors.white,
-                        side: BorderSide(color: Colors.white)
+                        side: BorderSide(color: Colors.white),
                       ),
                       child: const Text(
                         'Start Comparing',
@@ -355,14 +354,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: 60,
                           child: Text(
                             toggled
-                            ? 'Compare two schools'
-                            : 'Compare all schools',
+                                ? 'Compare two schools'
+                                : 'Compare all schools',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 9,
-                              color:  Colors.black
-
-                            ),
+                            style: TextStyle(fontSize: 9, color: Colors.black),
                           ),
                         ),
                       ],
