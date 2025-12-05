@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'router.dart';
+import 'package:flutter/services.dart';
 
 class School {
   final String name;
@@ -90,6 +91,7 @@ class _ComparsionChatboxState extends State<ComparsionChatbox> {
             "widget": TwoSchoolInfoBubble(
               school1: selectedSchools[0],
               school2: selectedSchools[1],
+              schools: _schoolList,
             ),
           });
         } else {
@@ -223,12 +225,14 @@ class _ComparsionChatboxState extends State<ComparsionChatbox> {
 }
 
 class TwoSchoolInfoBubble extends StatefulWidget {
-  final School school1;
-  final School school2;
-  const TwoSchoolInfoBubble({
+  School school1;
+  School school2;
+  final List<School> schools;
+  TwoSchoolInfoBubble({
     super.key,
     required this.school1,
     required this.school2,
+    required this.schools,
   });
 
   @override
@@ -236,14 +240,12 @@ class TwoSchoolInfoBubble extends StatefulWidget {
 }
 
 class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
-  // School school1 = widget.school1;
-  // School school2 = widget.school2;
-
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      padding: const EdgeInsets.all(25.0),
+
       decoration: const BoxDecoration(
         color: Color(0xFF718096), // same as bot text bubble
         borderRadius: BorderRadius.only(
@@ -257,7 +259,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // school 1
               Expanded(
@@ -269,10 +271,106 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                       width: 50,
                       height: 50,
                     ),
-                    Text(
-                      widget.school1.name,
-                      style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // school name
+                        SizedBox(
+                          width: 75,
+                          child: Text(
+                            widget.school1.name,
+                            style: TextStyle(
+                              color: Color.fromRGBO(236, 226, 208, 1),
+                            ),
+                          ),
+                        ),
+                        // dropdown
+                        SizedBox(
+                          width: 30,
+                          height: 20,
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFECE2D0),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Color.fromRGBO(27, 77, 62, 1),
+                                width: 1,
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<School>(
+                                value: widget.school1,
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Color.fromRGBO(27, 77, 62, 1),
+                                ),
+                                dropdownColor: const Color(0xFFECE2D0),
+                                isExpanded: true,
+
+                                selectedItemBuilder: (context) {
+                                  return widget.schools.map((s) {
+                                    return SizedBox();
+                                  }).toList();
+                                },
+
+                                items: widget.schools.map((s) {
+                                  return DropdownMenuItem<School>(
+                                    value: s,
+                                    child: SizedBox(
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            s.logoAsset,
+                                            width: 32,
+                                            height: 32,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              s.name,
+                                              style: const TextStyle(
+                                                color: Color.fromRGBO(
+                                                  27,
+                                                  77,
+                                                  62,
+                                                  1,
+                                                ),
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+
+                                onChanged: (School? newSchool) {
+                                  if (newSchool == null) return;
+                                  if (newSchool == widget.school2) {
+                                    HapticFeedback.mediumImpact();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Please select two different schools to compare.',
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  setState(() {
+                                    widget.school1 = newSchool;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+
                     Divider(thickness: 1, color: Colors.black),
                     SizedBox(height: 5),
                     Text(
@@ -324,7 +422,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                   ],
                 ),
               ),
-              SizedBox(width: 10),
+              VerticalDivider(),
               // school 2
               Expanded(
                 flex: 1,
@@ -335,9 +433,106 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                       width: 50,
                       height: 50,
                     ),
-                    Text(
-                      widget.school2.name,
-                      style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          width: 75,
+                          child:
+                              // school name
+                              Text(
+                                widget.school2.name,
+                                style: TextStyle(
+                                  color: Color.fromRGBO(236, 226, 208, 1),
+                                ),
+                              ),
+                        ),
+                        // dropdown
+                        SizedBox(
+                          width: 30,
+                          height: 20,
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFECE2D0),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Color.fromRGBO(27, 77, 62, 1),
+                                width: 1,
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<School>(
+                                value: widget.school1,
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Color.fromRGBO(27, 77, 62, 1),
+                                ),
+                                dropdownColor: const Color(0xFFECE2D0),
+                                isExpanded: true,
+
+                                selectedItemBuilder: (context) {
+                                  return widget.schools.map((s) {
+                                    return SizedBox();
+                                  }).toList();
+                                },
+
+                                items: widget.schools.map((s) {
+                                  return DropdownMenuItem<School>(
+                                    value: s,
+                                    child: SizedBox(
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            s.logoAsset,
+                                            width: 32,
+                                            height: 32,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              s.name,
+                                              style: const TextStyle(
+                                                color: Color.fromRGBO(
+                                                  27,
+                                                  77,
+                                                  62,
+                                                  1,
+                                                ),
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+
+                                onChanged: (School? newSchool) {
+                                  if (newSchool == null) return;
+                                  if (newSchool == widget.school1) {
+                                    HapticFeedback.mediumImpact();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Please select two different schools to compare.',
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  setState(() {
+                                    widget.school2 = newSchool;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     Divider(thickness: 1, color: Colors.black),
                     SizedBox(height: 5),
@@ -392,14 +587,8 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
               ),
             ],
           ),
-
-          Row(
-            children: [
-              Divider(thickness: 1, color: Colors.black),
-
-              Text('\nSummary of differences between schools\n'),
-            ],
-          ),
+          Divider(thickness: 1, color: Colors.black),
+          Row(children: [Text('\nSummary of differences between schools\n')]),
         ],
       ),
     );
