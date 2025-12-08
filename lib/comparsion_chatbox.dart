@@ -250,12 +250,9 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: const Color(0xFFECE2D0),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color.fromRGBO(27, 77, 62, 1),
-          width: 1,
-        ),
+        borderRadius: BorderRadius.circular(10),
       ),
+
       child: DropdownButtonHideUnderline(
         child: DropdownButton<School>(
           value: selected,
@@ -274,11 +271,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // logo
-                  Image.asset(
-                    s.logoAsset,
-                    width: 32,
-                    height: 32,
-                  ),
+                  Image.asset(s.logoAsset, width: 32, height: 32),
                   const SizedBox(height: 4),
                   // school name and arrow to the right of the school name
                   Align(
@@ -303,7 +296,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
               value: s,
               child: Row(
                 children: [
-                  Image.asset(s.logoAsset, width: 28, height: 28),
+                  Image.asset(s.logoAsset, width: 30, height: 30),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -325,7 +318,9 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
             if (newSchool == other) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Please select two different schools to compare.'),
+                  content: Text(
+                    'Please select two different schools to compare.',
+                  ),
                 ),
               );
               return;
@@ -337,14 +332,15 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.all(25.0),
+      padding: const EdgeInsets.all(15.0),
 
       decoration: const BoxDecoration(
-        color: Color(0xFF718096), // same as bot text bubble
+        color: Color(0xFF718096),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
@@ -371,50 +367,159 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                       },
                     ),
 
-                    Divider(thickness: 1, color: Colors.black),
-                    SizedBox(height: 5),
+                    SizedBox(height: 10),
+
                     Text(
                       'Brief description of the school',
                       style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
                     ),
-                    SizedBox(height: 5),
-                    Divider(thickness: 1, color: Colors.black),
+                    SizedBox(height: 10),
+
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
+
                       children: [
                         Expanded(
                           child: Container(
                             width: 25,
+                            height: 30,
                             alignment: Alignment.center,
-                            child: Text('Category 1'),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(236, 226, 208, 1),
+                              border: Border.all(
+                                color: Color.fromRGBO(236, 226, 208, 1),
+                                width: 0.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(55, 0, 0, 0),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+
+                            child: Text(
+                              'Category 1',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                         ),
                       ],
                     ),
-
-                    Divider(thickness: 1, color: Colors.black),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           child: Container(
                             width: 25,
+                            height: 30,
                             alignment: Alignment.center,
-                            child: Text('Category 2'),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(212, 200, 177, 1),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(55, 0, 0, 0),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              'Category 2',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                         ),
                       ],
                     ),
-
-                    Divider(thickness: 1, color: Colors.black),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           child: Container(
                             width: 25,
+                            height: 30,
                             alignment: Alignment.center,
-                            child: Text('Category 3'),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(236, 226, 208, 1),
+                              border: Border.all(
+                                color: Color.fromRGBO(236, 226, 208, 1),
+                                width: 0.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(55, 0, 0, 0),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              'Category 3',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 25,
+                            height: 30,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(212, 200, 177, 1),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(55, 0, 0, 0),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              'Category 4',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 25,
+                            height: 30,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(236, 226, 208, 1),
+                              border: Border.all(
+                                color: Color.fromRGBO(236, 226, 208, 1),
+                                width: 0.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(55, 0, 0, 0),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              'Category 5',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                         ),
                       ],
@@ -422,7 +527,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                   ],
                 ),
               ),
-              VerticalDivider(),
+              VerticalDivider(width: 15),
               // school 2
               Expanded(
                 flex: 1,
@@ -435,51 +540,159 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                         setState(() => widget.school2 = newSchool);
                       },
                     ),
-                    
-                    Divider(thickness: 1, color: Colors.black),
-                    SizedBox(height: 5),
+
+                    SizedBox(height: 10),
                     Text(
                       'Brief description of the school',
                       style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
                     ),
-                    SizedBox(height: 5),
-                    Divider(thickness: 1, color: Colors.black),
+                    SizedBox(height: 10),
+
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
+
                       children: [
                         Expanded(
                           child: Container(
                             width: 25,
+                            height: 30,
                             alignment: Alignment.center,
-                            child: Text('Category 1'),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(236, 226, 208, 1),
+                              border: Border.all(
+                                color: Color.fromRGBO(236, 226, 208, 1),
+                                width: 0.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(55, 0, 0, 0),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+
+                            child: Text(
+                              'Category 1',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                         ),
                       ],
                     ),
-
-                    Divider(thickness: 1, color: Colors.black),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           child: Container(
                             width: 25,
+                            height: 30,
                             alignment: Alignment.center,
-                            child: Text('Category 2'),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(212, 200, 177, 1),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(55, 0, 0, 0),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              'Category 2',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                         ),
                       ],
                     ),
-
-                    Divider(thickness: 1, color: Colors.black),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           child: Container(
                             width: 25,
+                            height: 30,
                             alignment: Alignment.center,
-                            child: Text('Category 3'),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(236, 226, 208, 1),
+                              border: Border.all(
+                                color: Color.fromRGBO(236, 226, 208, 1),
+                                width: 0.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(55, 0, 0, 0),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              'Category 3',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 25,
+                            height: 30,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(212, 200, 177, 1),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(55, 0, 0, 0),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              'Category 4',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 25,
+                            height: 30,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(236, 226, 208, 1),
+                              border: Border.all(
+                                color: Color.fromRGBO(236, 226, 208, 1),
+                                width: 0.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(55, 0, 0, 0),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              'Category 5',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                         ),
                       ],
@@ -489,8 +702,14 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
               ),
             ],
           ),
-          Divider(thickness: 1, color: Colors.black),
-          Row(children: [Text('\nSummary of differences between schools\n')]),
+          Row(
+            children: [
+              Text(
+                '\nSummary of differences between schools\n',
+                style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -529,7 +748,7 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
       margin: const EdgeInsets.symmetric(vertical: 5),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
       decoration: const BoxDecoration(
-        color: Color(0xFF718096), 
+        color: Color(0xFF718096),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
