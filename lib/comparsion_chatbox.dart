@@ -247,10 +247,14 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
   }) {
     return Container(
       width: 170,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: const Color(0xFFECE2D0),
-        borderRadius: BorderRadius.circular(10),
+        //borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(5),
+          topRight: Radius.circular(5),
+        ),
       ),
 
       child: DropdownButtonHideUnderline(
@@ -337,7 +341,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
 
       decoration: const BoxDecoration(
         color: Color(0xFF718096),
@@ -367,17 +371,9 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                       },
                     ),
 
-                    SizedBox(height: 10),
-
-                    Text(
-                      'Brief description of the school',
-                      style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
-                    ),
-                    SizedBox(height: 10),
-
+                    //SizedBox(height: 10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
-
                       children: [
                         Expanded(
                           child: Container(
@@ -385,19 +381,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(236, 226, 208, 1),
-                              border: Border.all(
-                                color: Color.fromRGBO(236, 226, 208, 1),
-                                width: 0.5,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(55, 0, 0, 0),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
+                              color: Color.fromRGBO(212, 200, 177, 1),
                             ),
 
                             child: Text(
@@ -417,15 +401,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(212, 200, 177, 1),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(55, 0, 0, 0),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
+                              color: Color.fromRGBO(236, 226, 208, 1),
                             ),
                             child: Text(
                               'Category 2',
@@ -444,19 +420,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(236, 226, 208, 1),
-                              border: Border.all(
-                                color: Color.fromRGBO(236, 226, 208, 1),
-                                width: 0.5,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(55, 0, 0, 0),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
+                              color: Color.fromRGBO(212, 200, 177, 1),
                             ),
                             child: Text(
                               'Category 3',
@@ -475,15 +439,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(212, 200, 177, 1),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(55, 0, 0, 0),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
+                              color: Color.fromRGBO(236, 226, 208, 1),
                             ),
                             child: Text(
                               'Category 4',
@@ -502,19 +458,11 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(236, 226, 208, 1),
-                              border: Border.all(
-                                color: Color.fromRGBO(236, 226, 208, 1),
-                                width: 0.5,
+                              color: Color.fromRGBO(212, 200, 177, 1),
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(5),
+                                bottomRight: Radius.circular(5),
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(55, 0, 0, 0),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
                             ),
                             child: Text(
                               'Category 5',
@@ -541,16 +489,8 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                       },
                     ),
 
-                    SizedBox(height: 10),
-                    Text(
-                      'Brief description of the school',
-                      style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
-                    ),
-                    SizedBox(height: 10),
-
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
-
                       children: [
                         Expanded(
                           child: Container(
@@ -558,19 +498,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(236, 226, 208, 1),
-                              border: Border.all(
-                                color: Color.fromRGBO(236, 226, 208, 1),
-                                width: 0.5,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(55, 0, 0, 0),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
+                              color: Color.fromRGBO(212, 200, 177, 1),
                             ),
 
                             child: Text(
@@ -590,15 +518,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(212, 200, 177, 1),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(55, 0, 0, 0),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
+                              color: Color.fromRGBO(236, 226, 208, 1),
                             ),
                             child: Text(
                               'Category 2',
@@ -617,19 +537,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(236, 226, 208, 1),
-                              border: Border.all(
-                                color: Color.fromRGBO(236, 226, 208, 1),
-                                width: 0.5,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(55, 0, 0, 0),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
+                              color: Color.fromRGBO(212, 200, 177, 1),
                             ),
                             child: Text(
                               'Category 3',
@@ -648,15 +556,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(212, 200, 177, 1),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(55, 0, 0, 0),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
+                              color: Color.fromRGBO(236, 226, 208, 1),
                             ),
                             child: Text(
                               'Category 4',
@@ -675,19 +575,11 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             height: 30,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(236, 226, 208, 1),
-                              border: Border.all(
-                                color: Color.fromRGBO(236, 226, 208, 1),
-                                width: 0.5,
+                              color: Color.fromRGBO(212, 200, 177, 1),
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(5),
+                                bottomRight: Radius.circular(5),
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(55, 0, 0, 0),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(2, 2),
-                                ),
-                              ],
                             ),
                             child: Text(
                               'Category 5',
@@ -703,6 +595,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
             ],
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 '\nSummary of differences between schools\n',
