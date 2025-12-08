@@ -413,7 +413,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          selectedSchoolNames.clear();
+                          if (selectedSchoolNames.isEmpty) {
+                            if (toggled && filteredList.length > 2) {
+                              selectedSchoolNames = filteredList
+                                  .take(2)
+                                  .map((school) => school.name)
+                                  .toSet();
+
+                              HapticFeedback.mediumImpact();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Comparison mode is on. Only 2 schools can be selected.',
+                                  ),
+                                ),
+                              );
+                            } else {
+                              selectedSchoolNames =
+                                  filteredList.map((school) => school.name).toSet();
+                            }
+                          } else {
+                            selectedSchoolNames.clear();
+                          }
                         });
                       },
                       style: ElevatedButton.styleFrom(
@@ -425,7 +446,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           borderRadius: BorderRadius.zero,
                         ),
                       ),
-                      child: Text("Clear All", style: TextStyle(fontSize: 10)),
+                      child: Text(
+                        selectedSchoolNames.isEmpty ? "Select All" : "Clear All",
+                        style: TextStyle(fontSize: 10)
+                      ),
                     ),
                   ],
                 ),
