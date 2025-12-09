@@ -168,12 +168,12 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     "Size & Reputation",
   ];
   static const List<String> schools = [
-    "Ashford University", 
-    "Crestmont University", 
-    "Fairview University", 
-    "Sutton College", 
-    "Valleyview University", 
-    "Wakefield University"
+    "Ashford University",
+    "Crestmont University",
+    "Fairview University",
+    "Sutton College",
+    "Valleyview University",
+    "Wakefield University",
   ];
 
   final List<School> _schoolList = schools.map((name) {
@@ -273,208 +273,219 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
         return StatefulBuilder(
           builder: (context, setPopupState) {
             Widget buildCategoryStep() {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Please select each category you are interested in",
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 15),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final double totalWidth = constraints.maxWidth;
-                      const double spacing = 10;
-                      final double itemWidth = (totalWidth - spacing) / 2;
+              return Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(2),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 10),
+                      const Text(
+                        "Please select each category you are interested in",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final double totalWidth = constraints.maxWidth;
+                          const double spacing = 15;
+                          final double itemWidth = (totalWidth - spacing) / 2;
 
-                      return Wrap(
-                        spacing: spacing,
-                        runSpacing: spacing,
-                        children: _categories.map((cat) {
-                          final isSelected = _selectedCategories.contains(cat);
+                          return Wrap(
+                            spacing: spacing,
+                            runSpacing: spacing,
+                            children: _categories.map((cat) {
+                              final isSelected = _selectedCategories.contains(
+                                cat,
+                              );
 
-                          return SizedBox(
-                            width: itemWidth,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                setPopupState(() {
-                                  if (isSelected) {
-                                    _selectedCategories.remove(cat);
-                                  } else {
-                                    _selectedCategories.add(cat);
-                                  }
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isSelected
-                                    ? const Color(0xFF7FB480)
-                                    : Colors.white,
-                                foregroundColor: isSelected
-                                    ? Colors.white
-                                    : const Color(0xFF7FB480),
-                                textStyle: const TextStyle(fontSize: 12),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 6,
+                              return SizedBox(
+                                width: itemWidth,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    setPopupState(() {
+                                      if (isSelected) {
+                                        _selectedCategories.remove(cat);
+                                      } else {
+                                        _selectedCategories.add(cat);
+                                      }
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: isSelected
+                                        ? const Color(0xFF7FB480)
+                                        : Colors.white,
+                                    foregroundColor: isSelected
+                                        ? Colors.white
+                                        : const Color(0xFF7FB480),
+                                    textStyle: const TextStyle(fontSize: 12),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                  child: Text(cat, textAlign: TextAlign.center),
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 15),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_selectedCategories.isEmpty) {
+                            HapticFeedback.mediumImpact();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'No Categories has been selected. Please select at least one.',
                                 ),
                               ),
-                              child: Text(cat, textAlign: TextAlign.center),
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 15),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_selectedCategories.isEmpty) {
-                        HapticFeedback.mediumImpact();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'No Categories has been selected. Please select at least one.',
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-                      _sortToDefault();
-                      ranking = List.from(_selectedCategories);
+                            );
+                            return;
+                          }
+                          _sortToDefault();
+                          ranking = List.from(_selectedCategories);
 
-                      // new screen should come from the RIGHT
-                      setPopupState(() {
-                        step = 1;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF7FB480),
-                      foregroundColor: Colors.white,
-                      textStyle: const TextStyle(fontSize: 14),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 24,
+                          // new screen should come from the right
+                          setPopupState(() {
+                            step = 1;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF7FB480),
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(fontSize: 14),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 20,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                        ),
+                        child: const Text("Next"),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    child: const Text("Next"),
+                    ],
                   ),
-                ],
+                ),
               );
             }
 
             Widget buildRankingStep() {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Please rank each category by weight by dragging each category",
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 15),
-                  SizedBox(
-                    height: 300,
-                    child: ReorderableListView.builder(
-                      buildDefaultDragHandles: false,
-                      itemCount: ranking.length,
-                      onReorder: (oldIndex, newIndex) {
-                        setPopupState(() {
-                          if (newIndex > oldIndex) newIndex -= 1;
-                          final item = ranking.removeAt(oldIndex);
-                          ranking.insert(newIndex, item);
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        final item = ranking[index];
-
-                        return ListTile(
-                          key: ValueKey(item),
-                          leading: CircleAvatar(child: Text('${index + 1}')),
-                          title: Text(item),
-                          trailing: ReorderableDragStartListener(
-                            index: index,
-                            child: const Icon(Icons.drag_handle),
-                          ),
-                        );
-                      },
+              return Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Please rank each category by weight by dragging each category",
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
+                    const SizedBox(height: 15),
+                    SizedBox(
+                      height: 300,
+                      child: ReorderableListView.builder(
+                        buildDefaultDragHandles: false,
+                        itemCount: ranking.length,
+                        onReorder: (oldIndex, newIndex) {
                           setPopupState(() {
-                            step = 0;               
+                            if (newIndex > oldIndex) newIndex -= 1;
+                            final item = ranking.removeAt(oldIndex);
+                            ranking.insert(newIndex, item);
                           });
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF7FB480),
-                          foregroundColor: Colors.white,
-                          textStyle: const TextStyle(fontSize: 14),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 24,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                        ),
-                        child: const Text("Back"),
-                      ),
-                      SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: () async {
-                          setState(() {
-                            _selectedCategories = List.from(ranking);
-                          });
-                          Navigator.pop(context);
+                        itemBuilder: (context, index) {
+                          final item = ranking[index];
 
-                          final result = await Navigator.push(
-                            this.context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  Categories(ranking: _selectedCategories),
+                          return ListTile(
+                            key: ValueKey(item),
+                            leading: CircleAvatar(child: Text('${index + 1}')),
+                            title: Text(item),
+                            trailing: ReorderableDragStartListener(
+                              index: index,
+                              child: const Icon(Icons.drag_handle),
                             ),
                           );
-
-                          if (result != null) {
-                            setState(() {
-                              _messages.add({
-                                "from": "user",
-                                "type": "text",
-                                "text": formatCriteria(result),
-                              });
-                            });
-
-                            _scrollToBottom();
-                            _simulateBotResponse();
-                          }
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF7FB480),
-                          foregroundColor: Colors.white,
-                          textStyle: const TextStyle(fontSize: 14),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 24,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                        ),
-                        child: const Text("Enter"),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setPopupState(() {
+                              step = 0;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF7FB480),
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(fontSize: 14),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 24,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          child: const Text("Back"),
+                        ),
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              _selectedCategories = List.from(ranking);
+                            });
+                            Navigator.pop(context);
+
+                            final result = await Navigator.push(
+                              this.context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    Categories(ranking: _selectedCategories),
+                              ),
+                            );
+
+                            if (result != null) {
+                              setState(() {
+                                _messages.add({
+                                  "from": "user",
+                                  "type": "text",
+                                  "text": formatCriteria(result),
+                                });
+                              });
+
+                              _scrollToBottom();
+                              _simulateBotResponse();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF7FB480),
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(fontSize: 14),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 24,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          child: const Text("Enter"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               );
             }
 
@@ -508,8 +519,8 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                             end: const Offset(-1.0, 0.0),
                           ).animate(curved);
                           final offsetAnimation = isOutgoing
-                            ? outToLeft
-                            : inFromRight;
+                              ? outToLeft
+                              : inFromRight;
                           return ClipRect(
                             child: SlideTransition(
                               position: offsetAnimation,
@@ -521,7 +532,9 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                           );
                         },
                         child: Column(
-                          key: ValueKey<int>(step), // 0 = categories, 1 = ranking
+                          key: ValueKey<int>(
+                            step,
+                          ), // 0 = categories, 1 = ranking
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             if (step == 0)
@@ -568,7 +581,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     return Scaffold(
       appBar: AppBar(title: const Text("Chatbox By Criteria")),
       body: Column(
-        
         children: [
           Expanded(
             child: ListView.builder(

@@ -131,18 +131,17 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
                 children: [
                   SizedBox(
                     width: 75,
-                    child: Expanded(
-                      child: Text(
-                        school.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.visible,
+                    child: Text(
+                      school.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
                       ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.visible,
                     ),
                   ),
+
                   if (!widget.isSelectMode)
                     const Icon(Icons.keyboard_arrow_right)
                   else
@@ -170,12 +169,12 @@ class _MyHomePageState extends State<MyHomePage> {
   List<School> filteredList = [];
   Set<String> selectedSchoolNames = {};
   static const List<String> schools = [
-    "Ashford University", 
-    "Crestmont University", 
-    "Fairview University", 
-    "Sutton College", 
-    "Valleyview University", 
-    "Wakefield University"
+    "Ashford University",
+    "Crestmont University",
+    "Fairview University",
+    "Sutton College",
+    "Valleyview University",
+    "Wakefield University",
   ];
 
   final List<School> _schoolList = schools.map((name) {
@@ -294,7 +293,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 5),
+              //SizedBox(height: 5),
               // comparison chatbox
               if (isSelect)
                 Row(
@@ -342,8 +341,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         backgroundColor: const Color(0xFFACE4AA),
                         foregroundColor: const Color(0xFF1B4D3E),
                         side: const BorderSide(color: Colors.white),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        minimumSize: const Size(0, 32+4), // height ~ Switch
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        minimumSize: const Size(0, 32 + 4), // height ~ Switch
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         visualDensity: VisualDensity.compact,
                       ),
@@ -433,11 +435,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedSchoolNames.isEmpty? const Color(0xFFACE4AA) : Color.fromRGBO(229, 62, 62, 1),
-                        foregroundColor: selectedSchoolNames.isEmpty? const Color(0xFF1B4D3E) : Colors.white,
+                        backgroundColor: selectedSchoolNames.isEmpty
+                            ? const Color(0xFFACE4AA)
+                            : Color.fromRGBO(229, 62, 62, 1),
+                        foregroundColor: selectedSchoolNames.isEmpty
+                            ? const Color(0xFF1B4D3E)
+                            : Colors.white,
                         side: const BorderSide(color: Colors.white),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                        minimumSize: const Size(0, 32+4), // height ~ Switch
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 0,
+                        ),
+                        minimumSize: const Size(0, 32 + 4), // height ~ Switch
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         visualDensity: VisualDensity.compact,
                       ),
