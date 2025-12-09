@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'router.dart';
 import 'categories.dart';
+import 'package:flutter/services.dart';
 
 class ChatboxByCriteria extends StatefulWidget {
   const ChatboxByCriteria({super.key});
@@ -289,206 +290,290 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     );
   }
 
-  void _showCategoryPopup() {
+  void _showCriteriaFlowPopup() {
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setPopupState) {
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              insetPadding: EdgeInsets.all(20),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                color: const Color(0xFFEFF8EF),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: 10),
-                    const Text(
-                      "Please select each category you are interested in",
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 15),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        final double totalWidth = constraints.maxWidth;
-                        const double spacing = 10;
-                        final double itemWidth = (totalWidth - spacing) / 2;
-
-                        return Wrap(
-                          spacing: spacing,
-                          runSpacing: spacing,
-                          children: _categories.map((cat) {
-                            final isSelected = _selectedCategories.contains(cat);
-
-                            return SizedBox(
-                              width: itemWidth,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // update popup state
-                                  setPopupState(() {
-                                    if (isSelected) {
-                                      _selectedCategories.remove(cat);
-                                    } else {
-                                      _selectedCategories.add(cat);
-                                    }
-                                  });
-                                  setState(() {});
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: isSelected
-                                      ? const Color(0xFF7FB480) // selected
-                                      : Colors.white, // normal
-                                  foregroundColor: isSelected
-                                      ? Colors.white
-                                      : const Color(0xFF7FB480),
-                                  textStyle: const TextStyle(fontSize: 12),
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 6,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                ),
-                                child: Text(cat, textAlign: TextAlign.center),
-                              ),
-                            );
-                          }).toList(),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    ElevatedButton(
-                      onPressed: () {
-                        _sortToDefault();
-                        Navigator.pop(context);
-                        _showRankingPopup();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF7FB480),
-                        foregroundColor: Colors.white,
-                        textStyle: const TextStyle(fontSize: 14),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 24,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                      ),
-                      child: const Text("Next"),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void _showRankingPopup() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
+        int step = 0; // 0 = category selection, 1 = ranking
+        bool slideFromRight = true; 
         List<String> ranking = List.from(_selectedCategories);
 
         return StatefulBuilder(
           builder: (context, setPopupState) {
+            Widget buildCategoryStep() {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Please select each category you are interested in",
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 15),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final double totalWidth = constraints.maxWidth;
+                      const double spacing = 10;
+                      final double itemWidth = (totalWidth - spacing) / 2;
+
+                      return Wrap(
+                        spacing: spacing,
+                        runSpacing: spacing,
+                        children: _categories.map((cat) {
+                          final isSelected = _selectedCategories.contains(cat);
+
+                          return SizedBox(
+                            width: itemWidth,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setPopupState(() {
+                                  if (isSelected) {
+                                    _selectedCategories.remove(cat);
+                                  } else {
+                                    _selectedCategories.add(cat);
+                                  }
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isSelected
+                                    ? const Color(0xFF7FB480)
+                                    : Colors.white,
+                                foregroundColor: isSelected
+                                    ? Colors.white
+                                    : const Color(0xFF7FB480),
+                                textStyle: const TextStyle(fontSize: 12),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 6),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              child: Text(cat, textAlign: TextAlign.center),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 15),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_selectedCategories.isEmpty) {
+                            HapticFeedback.mediumImpact();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'No Categories has been selected. Please select at least one.',
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+                      _sortToDefault();
+                      ranking = List.from(_selectedCategories);
+
+                      // new screen should come from the RIGHT
+                      setPopupState(() {
+                        slideFromRight = true;
+                        step = 1;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF7FB480),
+                      foregroundColor: Colors.white,
+                      textStyle: const TextStyle(fontSize: 14),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 24,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    child: const Text("Next"),
+                  ),
+                ],
+              );
+            }
+
+            Widget buildRankingStep() {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Please rank each category by weight by dragging each category",
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 15),
+                  SizedBox(
+                    height: 300,
+                    child: ReorderableListView.builder(
+                      buildDefaultDragHandles: false,
+                      itemCount: ranking.length,
+                      onReorder: (oldIndex, newIndex) {
+                        setPopupState(() {
+                          if (newIndex > oldIndex) newIndex -= 1;
+                          final item = ranking.removeAt(oldIndex);
+                          ranking.insert(newIndex, item);
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        final item = ranking[index];
+
+                        return ListTile(
+                          key: ValueKey(item),
+                          leading: CircleAvatar(child: Text('${index + 1}')),
+                          title: Text(item),
+                          trailing: ReorderableDragStartListener(
+                            index: index,
+                            child: const Icon(Icons.drag_handle),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          setPopupState(() {
+                            slideFromRight = false; 
+                            step = 0;               
+                          });
+                        }, 
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF7FB480),
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(fontSize: 14),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 24,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                        ),
+                        child: const Text("Back"),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            _selectedCategories = List.from(ranking);
+                          });
+                          Navigator.pop(context);
+
+                          final result = await Navigator.push(
+                            this.context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  Categories(ranking: _selectedCategories),
+                            ),
+                          );
+
+                          if (result != null) {
+                            setState(() {
+                              _messages.add({
+                                "from": "user",
+                                "type": "text",
+                                "text": formatCriteria(result),
+                              });
+                            });
+
+                            _scrollToBottom();
+                            _simulateBotResponse();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF7FB480),
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(fontSize: 14),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 24,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                        ),
+                        child: const Text("Enter"),
+                      ),
+                    ]
+                  )
+                ],
+              );
+            }
+
             return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              insetPadding: EdgeInsets.all(20),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                color: const Color(0xFFEFF8EF),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: 10),
-                    const Text(
-                      "Please rank each category by weight by dragging each category",
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 15),
-                    SizedBox(
-                      height: 300,
-                      child: ReorderableListView.builder(
-                        buildDefaultDragHandles: false,
-                        itemCount: ranking.length,
-                        onReorder: (oldIndex, newIndex) {
-                          setPopupState(() {
-                            if (newIndex > oldIndex) newIndex -= 1;
-                            final item = ranking.removeAt(oldIndex);
-                            ranking.insert(newIndex, item);
-                          });
-                        },
-                        itemBuilder: (context, index) {
-                          final item = ranking[index];
-
-                          return ListTile(
-                            key: ValueKey(item),
-                            leading: CircleAvatar(child: Text('${index + 1}')),
-                            title: Text(item),
-                            trailing: ReorderableDragStartListener(
-                              index: index,
-                              child: const Icon(Icons.drag_handle),
+              insetPadding: const EdgeInsets.all(20),
+              child: Stack(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: const Color(0xFFEFF8EF),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) {
+                        final bool isOutgoing = animation is ReverseAnimation;
+                        final curved = CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutCubic,
+                        );
+                        final inFromRight = Tween<Offset>(
+                          begin: const Offset(1.0, 0.0),
+                          end: Offset.zero,
+                        ).animate(curved);
+                        final outToLeft = Tween<Offset>(
+                          begin: Offset.zero,
+                          end: const Offset(-1.0, 0.0),
+                        ).animate(curved);
+                        final offsetAnimation = isOutgoing ? outToLeft : inFromRight;
+                        return ClipRect(
+                          child: SlideTransition(
+                            position: offsetAnimation,
+                            child: FadeTransition(
+                              opacity: animation,
+                              child: child,
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    ElevatedButton(
-                      onPressed: () async {
-                        setState(() {
-                          _selectedCategories = List.from(ranking);
-                        });
-                        Navigator.pop(context);
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => Categories(ranking: _selectedCategories),
                           ),
                         );
-
-                        if (result != null) {
-                          setState(() {
-                            _messages.add({
-                              "from": "user",
-                              "type": "text",
-                              "text": formatCriteria(result),
-                            });
-                          });
-
-                          _scrollToBottom();
-                          _simulateBotResponse();
-                        }
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF7FB480),
-                        foregroundColor: Colors.white,
-                        textStyle: const TextStyle(fontSize: 14),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 24,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
+                      child: Column(
+                        key: ValueKey<int>(step), // 0 = categories, 1 = ranking
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (step == 0)
+                            buildCategoryStep()
+                          else
+                            buildRankingStep(),
+                        ],
                       ),
-                      child: const Text("Enter"),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                  Positioned(
+                    right: 5,
+                    top: 5,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(
+                        Icons.close,
+                        size: 24,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+              
             );
           },
         );
@@ -569,7 +654,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: _showCategoryPopup,
+                  onTap: _showCriteriaFlowPopup,
                   child: Image.asset(
                     'assets/categories icon.png',
                     width: 40,
