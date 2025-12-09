@@ -219,6 +219,47 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     return buffer.toString().trim();
   }
 
+  void _showOverlayMessage(String message) {
+    final overlay = Overlay.of(context);
+    if (overlay == null) return;
+
+    late OverlayEntry entry;
+
+    entry = OverlayEntry(
+      builder: (ctx) {
+        return Positioned(
+          bottom: 24, // distance from bottom of the screen
+          left: 16,
+          right: 16,
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.85),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                message,
+                style: const TextStyle(color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    overlay.insert(entry);
+
+    Future.delayed(const Duration(seconds: 3)).then((_) {
+      if (entry.mounted) {
+        entry.remove();
+      }
+    });
+  }
+
+
   void _sendUserMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
@@ -338,19 +379,14 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                         onPressed: () {
                           if (_selectedCategories.isEmpty) {
                             HapticFeedback.mediumImpact();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'No Categories has been selected. Please select at least one.',
-                                ),
-                              ),
+                            _showOverlayMessage(
+                              'No categories have been selected. Please select at least one.',
                             );
                             return;
                           }
                           _sortToDefault();
                           ranking = List.from(_selectedCategories);
 
-                          // new screen should come from the right
                           setPopupState(() {
                             step = 1;
                           });
