@@ -280,12 +280,12 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(height: 10),
                       const Text(
-                        "Please select each category you are interested in",
+                        "\nPlease select each category you are interested in",
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 16),
                       ),
+
                       LayoutBuilder(
                         builder: (context, constraints) {
                           final double totalWidth = constraints.maxWidth;
@@ -334,7 +334,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                           );
                         },
                       ),
-                      const SizedBox(height: 15),
                       ElevatedButton(
                         onPressed: () {
                           if (_selectedCategories.isEmpty) {
