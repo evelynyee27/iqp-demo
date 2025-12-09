@@ -364,8 +364,8 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                         ),
                       ],
                     ),
-
-                    Divider(color: Color.fromRGBO(236, 226, 208, 1)),
+                    
+                    SizedBox(height: 10),
 
                     // school dropdowns
                     Row(
