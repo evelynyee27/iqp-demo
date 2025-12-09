@@ -246,16 +246,10 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
     required ValueChanged<School> onChanged,
   }) {
     return Container(
-      width: 170,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFECE2D0),
-        //borderRadius: BorderRadius.circular(5),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(5),
-          topRight: Radius.circular(5),
-        ),
-      ),
+      width: 150,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      decoration: BoxDecoration(color: const Color(0xFFECE2D0)),
 
       child: DropdownButtonHideUnderline(
         child: DropdownButton<School>(
@@ -341,10 +335,18 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
+      padding: const EdgeInsets.all(15),
 
       decoration: const BoxDecoration(
-        color: Color(0xFF718096),
+        //color: Color.fromARGB(255, 255, 255, 255),
+        gradient: LinearGradient(
+          colors: [
+            Color.fromRGBO(113, 128, 150, 1),
+            Color.fromRGBO(173, 193, 219, 1),
+          ],
+          begin: AlignmentGeometry.topCenter,
+          end: AlignmentGeometry.bottomCenter,
+        ),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
@@ -358,248 +360,178 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // school 1
+              // schools
               Expanded(
                 flex: 1,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildSchoolSelector(
-                      selected: widget.school1,
-                      other: widget.school2,
-                      onChanged: (newSchool) {
-                        setState(() => widget.school1 = newSchool);
-                      },
-                    ),
+                    // school dropdowns
+                    Row(
+                      children: [
+                        _buildSchoolSelector(
+                          selected: widget.school1,
+                          other: widget.school2,
+                          onChanged: (newSchool) {
+                            setState(() => widget.school1 = newSchool);
+                          },
+                        ),
 
-                    //SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 25,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(212, 200, 177, 1),
-                            ),
+                        SizedBox(width: 5),
 
-                            child: Text(
-                              'Category 1',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
+                        _buildSchoolSelector(
+                          selected: widget.school2,
+                          other: widget.school1,
+                          onChanged: (newSchool) {
+                            setState(() => widget.school2 = newSchool);
+                          },
                         ),
                       ],
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 25,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(236, 226, 208, 1),
-                            ),
-                            child: Text(
-                              'Category 2',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 25,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(212, 200, 177, 1),
-                            ),
-                            child: Text(
-                              'Category 3',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 25,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(236, 226, 208, 1),
-                            ),
-                            child: Text(
-                              'Category 4',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 25,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(212, 200, 177, 1),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(5),
-                                bottomRight: Radius.circular(5),
+                    Divider(color: Color.fromRGBO(236, 226, 208, 1)),
+
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: 25,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(236, 226, 208, 0.5),
+                              ),
+
+                              child: Text(
+                                'Category 1',
+                                style: TextStyle(color: Colors.black),
                               ),
                             ),
-                            child: Text(
-                              'Category 5',
-                              style: TextStyle(color: Colors.black),
+                          ),
+
+                          // const VerticalDivider(
+                          //   thickness: 1,
+                          //   //color: Colors.black,
+                          // ),
+                          SizedBox(width: 5),
+
+                          Expanded(
+                            child: Container(
+                              width: 25,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(236, 226, 208, 0.5),
+                              ),
+
+                              child: Text(
+                                'Category 1',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
+
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: 25,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(236, 226, 208, 0.75),
+                              ),
+
+                              child: Text(
+                                'Category 2',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+
+                          // const VerticalDivider(
+                          //   thickness: 1,
+                          //   //color: Colors.black,
+                          // ),
+                          SizedBox(width: 5),
+
+                          Expanded(
+                            child: Container(
+                              width: 25,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(236, 226, 208, 0.75),
+                              ),
+
+                              child: Text(
+                                'Category 2',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: 25,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(236, 226, 208, 1),
+                              ),
+
+                              child: Text(
+                                'Category 3',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+
+                          // const VerticalDivider(
+                          //   thickness: 1,
+                          //   //color: Colors.black,
+                          // ),
+                          SizedBox(width: 5),
+                          Expanded(
+                            child: Container(
+                              width: 25,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(236, 226, 208, 1),
+                              ),
+
+                              child: Text(
+                                'Category 3',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('\nSummary of differences between schools\n'),
                       ],
                     ),
                   ],
                 ),
-              ),
-              VerticalDivider(width: 15),
-              // school 2
-              Expanded(
-                flex: 1,
-                child: Column(
-                  children: [
-                    _buildSchoolSelector(
-                      selected: widget.school2,
-                      other: widget.school1,
-                      onChanged: (newSchool) {
-                        setState(() => widget.school2 = newSchool);
-                      },
-                    ),
-
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 25,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(212, 200, 177, 1),
-                            ),
-
-                            child: Text(
-                              'Category 1',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 25,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(236, 226, 208, 1),
-                            ),
-                            child: Text(
-                              'Category 2',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 25,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(212, 200, 177, 1),
-                            ),
-                            child: Text(
-                              'Category 3',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 25,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(236, 226, 208, 1),
-                            ),
-                            child: Text(
-                              'Category 4',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 25,
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(212, 200, 177, 1),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(5),
-                                bottomRight: Radius.circular(5),
-                              ),
-                            ),
-                            child: Text(
-                              'Category 5',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '\nSummary of differences between schools\n',
-                style: TextStyle(color: Color.fromRGBO(236, 226, 208, 1)),
               ),
             ],
           ),
