@@ -19,10 +19,7 @@ class School {
   final String name;
   final String info;
 
-  School({
-    required this.name,
-    required this.info,
-  });
+  School({required this.name, required this.info});
 
   String get logoAsset => 'assets/School logo/$name.png';
 }
@@ -44,11 +41,18 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
     const double spacing = 12;
 
     return Container(
-      color: const Color(0xFF718096), // background
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color.fromRGBO(113, 128, 150, 1),
+            Color.fromRGBO(173, 193, 219, 1),
+          ],
+          begin: AlignmentGeometry.topCenter,
+          end: AlignmentGeometry.bottomCenter,
+        ),
+      ), // background
       padding: const EdgeInsets.all(12),
-      child: Column(
-        children: _buildRows(spacing),
-      ),
+      child: Column(children: _buildRows(spacing)),
     );
   }
 
@@ -57,8 +61,7 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
 
     for (int i = 0; i < widget.schools.length; i += 2) {
       final int leftIndex = i;
-      final int? rightIndex =
-          (i + 1 < widget.schools.length) ? i + 1 : null;
+      final int? rightIndex = (i + 1 < widget.schools.length) ? i + 1 : null;
 
       // up to 2 cards per row
       rows.add(
@@ -82,7 +85,7 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Color.fromRGBO(236, 226, 208, 1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
@@ -111,10 +114,7 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
       },
       child: Card(
         color: const Color(0xFFECE2D0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         elevation: 2,
         child: Padding(
           padding: const EdgeInsets.all(5.0),
@@ -152,7 +152,6 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
     );
   }
 }
-
 
 class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   final TextEditingController _controller = TextEditingController();
@@ -220,17 +219,12 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     return buffer.toString().trim();
   }
 
-
   void _sendUserMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
 
     setState(() {
-      _messages.add({
-        "from": "user",
-        "type": "text",
-        "text": text,
-      });
+      _messages.add({"from": "user", "type": "text", "text": text});
     });
 
     _controller.clear();
@@ -248,10 +242,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
           "text": "Here are some schools that might fit you:",
         });
 
-        _messages.add({
-          "from": "bot",
-          "type": "schools",
-        });
+        _messages.add({"from": "bot", "type": "schools"});
       });
       _scrollToBottom();
     });
@@ -260,8 +251,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
-        _scrollController
-            .jumpTo(_scrollController.position.maxScrollExtent);
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       }
     });
   }
@@ -324,8 +314,9 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                                     ? Colors.white
                                     : const Color(0xFF7FB480),
                                 textStyle: const TextStyle(fontSize: 12),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 6),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 6,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
@@ -341,16 +332,16 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                   ElevatedButton(
                     onPressed: () {
                       if (_selectedCategories.isEmpty) {
-                            HapticFeedback.mediumImpact();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'No Categories has been selected. Please select at least one.',
-                                ),
-                              ),
-                            );
-                            return;
-                          }
+                        HapticFeedback.mediumImpact();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'No Categories has been selected. Please select at least one.',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
                       _sortToDefault();
                       ranking = List.from(_selectedCategories);
 
@@ -423,7 +414,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                           setPopupState(() {
                             step = 0;               
                           });
-                        }, 
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF7FB480),
                           foregroundColor: Colors.white,
@@ -481,8 +472,8 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                         ),
                         child: const Text("Enter"),
                       ),
-                    ]
-                  )
+                    ],
+                  ),
                 ],
               );
             }
@@ -516,7 +507,9 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                             begin: Offset.zero,
                             end: const Offset(-1.0, 0.0),
                           ).animate(curved);
-                          final offsetAnimation = isOutgoing ? outToLeft : inFromRight;
+                          final offsetAnimation = isOutgoing
+                            ? outToLeft
+                            : inFromRight;
                           return ClipRect(
                             child: SlideTransition(
                               position: offsetAnimation,
@@ -555,8 +548,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                     ),
                   ),
                 ],
-              )
-              
+              ),
             );
           },
         );
@@ -576,6 +568,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     return Scaffold(
       appBar: AppBar(title: const Text("Chatbox By Criteria")),
       body: Column(
+        
         children: [
           Expanded(
             child: ListView.builder(
@@ -589,9 +582,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                 if (type == "schools") {
                   return Align(
                     alignment: Alignment.centerLeft,
-                    child: SchoolResultsGrid(
-                      schools: _schoolList,
-                    ),
+                    child: SchoolResultsGrid(schools: _schoolList),
                   );
                 }
 
