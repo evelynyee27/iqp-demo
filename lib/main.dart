@@ -129,15 +129,18 @@ class _SchoolResultsGridState extends State<SchoolResultsGrid> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: Text(
-                      school.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                  SizedBox(
+                    width: 75,
+                    child: Expanded(
+                      child: Text(
+                        school.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.visible,
                       ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.visible,
                     ),
                   ),
                   if (!widget.isSelectMode)
@@ -429,8 +432,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               );
                             } else {
-                              selectedSchoolNames =
-                                  filteredList.map((school) => school.name).toSet();
+                              selectedSchoolNames = filteredList
+                                  .map((school) => school.name)
+                                  .toSet();
                             }
                           } else {
                             selectedSchoolNames.clear();
@@ -447,8 +451,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       child: Text(
-                        selectedSchoolNames.isEmpty ? "Select All" : "Clear All",
-                        style: TextStyle(fontSize: 10)
+                        selectedSchoolNames.isEmpty
+                            ? "Select All"
+                            : "Clear All",
+                        style: TextStyle(fontSize: 10),
                       ),
                     ),
                   ],

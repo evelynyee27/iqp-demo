@@ -245,87 +245,91 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
     required School other,
     required ValueChanged<School> onChanged,
   }) {
-    return Container(
-      width: 150,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      decoration: BoxDecoration(color: const Color(0xFFECE2D0)),
+    return Expanded(
+      child: Container(
+        color: Color.fromRGBO(236, 226, 208, 1),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        // decoration: BoxDecoration(color: const Color(0xFFECE2D0)),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<School>(
+            value: selected,
+            isExpanded: true,
+            dropdownColor: const Color(0xFFECE2D0),
+            itemHeight: null,
 
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<School>(
-          value: selected,
-          isExpanded: true,
-          dropdownColor: const Color(0xFFECE2D0),
-          itemHeight: null,
+            icon: const Icon(
+              Icons.keyboard_arrow_down,
+              color: Color.fromRGBO(27, 77, 62, 1),
+            ),
 
-          icon: const Icon(
-            Icons.keyboard_arrow_down,
-            color: Color.fromRGBO(27, 77, 62, 1),
-          ),
+            selectedItemBuilder: (context) {
+              return widget.schools.map((s) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // logo
+                    Image.asset(s.logoAsset, width: 32, height: 32),
+                    const SizedBox(height: 4),
 
-          selectedItemBuilder: (context) {
-            return widget.schools.map((s) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // logo
-                  Image.asset(s.logoAsset, width: 32, height: 32),
-                  const SizedBox(height: 4),
-                  // school name and arrow to the right of the school name
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      s.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Color.fromRGBO(27, 77, 62, 1),
-                        fontWeight: FontWeight.w600,
+                    // school name and arrow to the right of the school name
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SizedBox(
+                        width: 70,
+                        child: Text(
+                          s.name,
+                          style: const TextStyle(
+                            color: Color.fromRGBO(27, 77, 62, 1),
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            }).toList();
-          },
+                  ],
+                );
+              }).toList();
+            },
 
-          // items in the dropdown menu
-          items: widget.schools.map((s) {
-            return DropdownMenuItem<School>(
-              value: s,
-              child: Row(
-                children: [
-                  Image.asset(s.logoAsset, width: 30, height: 30),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      s.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Color.fromRGBO(27, 77, 62, 1),
+            // items in the dropdown menu
+            items: widget.schools.map((s) {
+              return DropdownMenuItem<School>(
+                value: s,
+                child: Row(
+                  children: [
+                    Image.asset(s.logoAsset, width: 30, height: 30),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        s.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Color.fromRGBO(27, 77, 62, 1),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-
-          onChanged: (School? newSchool) {
-            if (newSchool == null) return;
-
-            if (newSchool == other) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Please select two different schools to compare.',
-                  ),
+                  ],
                 ),
               );
-              return;
-            }
+            }).toList(),
 
-            onChanged(newSchool);
-          },
+            onChanged: (School? newSchool) {
+              if (newSchool == null) return;
+
+              if (newSchool == other) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Please select two different schools to compare.',
+                    ),
+                  ),
+                );
+                return;
+              }
+
+              onChanged(newSchool);
+            },
+          ),
         ),
       ),
     );
@@ -338,7 +342,6 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
       padding: const EdgeInsets.all(15),
 
       decoration: const BoxDecoration(
-        //color: Color.fromARGB(255, 255, 255, 255),
         gradient: LinearGradient(
           colors: [
             Color.fromRGBO(113, 128, 150, 1),
@@ -366,6 +369,22 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    // chatbot summary
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Summary of differences between schools given by bot...',
+                            style: TextStyle(
+                              color: Color.fromRGBO(236, 226, 208, 1),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Divider(color: Color.fromRGBO(236, 226, 208, 1)),
+
                     // school dropdowns
                     Row(
                       children: [
@@ -388,6 +407,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                         ),
                       ],
                     ),
+
                     Divider(color: Color.fromRGBO(236, 226, 208, 1)),
 
                     IntrinsicHeight(
@@ -410,10 +430,6 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             ),
                           ),
 
-                          // const VerticalDivider(
-                          //   thickness: 1,
-                          //   //color: Colors.black,
-                          // ),
                           SizedBox(width: 5),
 
                           Expanded(
@@ -445,7 +461,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                               height: 30,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(236, 226, 208, 0.75),
+                                color: Color.fromRGBO(236, 226, 208, 0.6),
                               ),
 
                               child: Text(
@@ -455,10 +471,6 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             ),
                           ),
 
-                          // const VerticalDivider(
-                          //   thickness: 1,
-                          //   //color: Colors.black,
-                          // ),
                           SizedBox(width: 5),
 
                           Expanded(
@@ -467,7 +479,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                               height: 30,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(236, 226, 208, 0.75),
+                                color: Color.fromRGBO(236, 226, 208, 0.6),
                               ),
 
                               child: Text(
@@ -490,7 +502,7 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                               height: 30,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(236, 226, 208, 1),
+                                color: Color.fromRGBO(236, 226, 208, 0.70),
                               ),
 
                               child: Text(
@@ -500,18 +512,15 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                             ),
                           ),
 
-                          // const VerticalDivider(
-                          //   thickness: 1,
-                          //   //color: Colors.black,
-                          // ),
                           SizedBox(width: 5),
+
                           Expanded(
                             child: Container(
                               width: 25,
                               height: 30,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(236, 226, 208, 1),
+                                color: Color.fromRGBO(236, 226, 208, 0.70),
                               ),
 
                               child: Text(
@@ -524,11 +533,85 @@ class _TwoSchoolInfoBubbleState extends State<TwoSchoolInfoBubble> {
                       ),
                     ),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('\nSummary of differences between schools\n'),
-                      ],
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: 25,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(236, 226, 208, 0.8),
+                              ),
+
+                              child: Text(
+                                'Category 4',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(width: 5),
+
+                          Expanded(
+                            child: Container(
+                              width: 25,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(236, 226, 208, 0.8),
+                              ),
+
+                              child: Text(
+                                'Category 4',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: 25,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(236, 226, 208, 1),
+                              ),
+
+                              child: Text(
+                                'Category 5',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(width: 5),
+                          Expanded(
+                            child: Container(
+                              width: 25,
+                              height: 30,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(236, 226, 208, 1),
+                              ),
+
+                              child: Text(
+                                'Category 5',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -573,7 +656,14 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
       margin: const EdgeInsets.symmetric(vertical: 5),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
       decoration: const BoxDecoration(
-        color: Color(0xFF718096),
+        gradient: LinearGradient(
+          colors: [
+            Color.fromRGBO(113, 128, 150, 1),
+            Color.fromRGBO(173, 193, 219, 1),
+          ],
+          begin: AlignmentGeometry.topCenter,
+          end: AlignmentGeometry.bottomCenter,
+        ),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
@@ -603,16 +693,12 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
                 width: 140,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
+                    horizontal: 5,
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFECE2D0),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Color.fromRGBO(27, 77, 62, 1),
-                      width: 1,
-                    ),
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<School>(
@@ -650,7 +736,6 @@ class _SchoolInfoBubbleState extends State<SchoolInfoBubble> {
                                   style: const TextStyle(
                                     color: Color.fromRGBO(27, 77, 62, 1),
                                   ),
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
