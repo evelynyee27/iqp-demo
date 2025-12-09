@@ -14,7 +14,7 @@ class Categories extends StatefulWidget {
   @override
   State<Categories> createState() => _CategoriesState();
 
-  @override
+  // @override
   Widget build(BuildContext context) {
     return MaterialApp.router(routerConfig: router);
   }

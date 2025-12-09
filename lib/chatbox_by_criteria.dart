@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'router.dart';
 import 'categories.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +9,7 @@ class ChatboxByCriteria extends StatefulWidget {
   @override
   State<ChatboxByCriteria> createState() => _ChatboxByCriteriaState();
 
-  @override
+  // @override
   Widget build(BuildContext context) {
     return MaterialApp.router(routerConfig: router);
   }
@@ -169,39 +168,22 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
     "Cost & Financial Aid",
     "Size & Reputation",
   ];
-
-  final List<School> _schoolList = [
-    School(
-      name: "Ashford University",
-      info:
-          "Explanation of why Ashford University fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Crestmont University",
-      info:
-          "Explanation of why Crestmont University fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Fairview University",
-      info:
-          "Explanation of why Fairview University fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Sutton College",
-      info:
-          "Explanation of why Sutton College fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Valleyview University",
-      info:
-          "Explanation of why Valleyview University fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Wakefield University",
-      info:
-          "Explanation of why Wakefield University fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
+  static const List<String> schools = [
+    "Ashford University", 
+    "Crestmont University", 
+    "Fairview University", 
+    "Sutton College", 
+    "Valleyview University", 
+    "Wakefield University"
   ];
+
+  final List<School> _schoolList = schools.map((name) {
+    return School(
+      name: name,
+      info:
+          "Explanation of why $name fits the user's criteria......\n\n\n\n\n\n\n",
+    );
+  }).toList();
 
   // currently selected categories
   List<String> _selectedCategories = [];
@@ -296,7 +278,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
       barrierDismissible: true,
       builder: (context) {
         int step = 0; // 0 = category selection, 1 = ranking
-        bool slideFromRight = true; 
         List<String> ranking = List.from(_selectedCategories);
 
         return StatefulBuilder(
@@ -375,7 +356,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
 
                       // new screen should come from the RIGHT
                       setPopupState(() {
-                        slideFromRight = true;
                         step = 1;
                       });
                     },
@@ -401,7 +381,7 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   const Text(
                     "Please rank each category by weight by dragging each category",
                     textAlign: TextAlign.center,
@@ -441,7 +421,6 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                       ElevatedButton(
                         onPressed: () {
                           setPopupState(() {
-                            slideFromRight = false; 
                             step = 0;               
                           });
                         }, 
@@ -518,42 +497,46 @@ class _ChatboxByCriteriaState extends State<ChatboxByCriteria> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     color: const Color(0xFFEFF8EF),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      transitionBuilder: (child, animation) {
-                        final bool isOutgoing = animation is ReverseAnimation;
-                        final curved = CurvedAnimation(
-                          parent: animation,
-                          curve: Curves.easeOutCubic,
-                        );
-                        final inFromRight = Tween<Offset>(
-                          begin: const Offset(1.0, 0.0),
-                          end: Offset.zero,
-                        ).animate(curved);
-                        final outToLeft = Tween<Offset>(
-                          begin: Offset.zero,
-                          end: const Offset(-1.0, 0.0),
-                        ).animate(curved);
-                        final offsetAnimation = isOutgoing ? outToLeft : inFromRight;
-                        return ClipRect(
-                          child: SlideTransition(
-                            position: offsetAnimation,
-                            child: FadeTransition(
-                              opacity: animation,
-                              child: child,
+                    child: SizedBox(
+                      width: 350,
+                      height: 440,
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        transitionBuilder: (child, animation) {
+                          final bool isOutgoing = animation is ReverseAnimation;
+                          final curved = CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOutCubic,
+                          );
+                          final inFromRight = Tween<Offset>(
+                            begin: const Offset(1.0, 0.0),
+                            end: Offset.zero,
+                          ).animate(curved);
+                          final outToLeft = Tween<Offset>(
+                            begin: Offset.zero,
+                            end: const Offset(-1.0, 0.0),
+                          ).animate(curved);
+                          final offsetAnimation = isOutgoing ? outToLeft : inFromRight;
+                          return ClipRect(
+                            child: SlideTransition(
+                              position: offsetAnimation,
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      child: Column(
-                        key: ValueKey<int>(step), // 0 = categories, 1 = ranking
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (step == 0)
-                            buildCategoryStep()
-                          else
-                            buildRankingStep(),
-                        ],
+                          );
+                        },
+                        child: Column(
+                          key: ValueKey<int>(step), // 0 = categories, 1 = ranking
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (step == 0)
+                              buildCategoryStep()
+                            else
+                              buildRankingStep(),
+                          ],
+                        ),
                       ),
                     ),
                   ),

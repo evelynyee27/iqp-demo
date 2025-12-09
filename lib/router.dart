@@ -2,8 +2,6 @@ import 'package:flutter_application_1/comparsion_chatbox.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/regular_chatbox.dart';
 import 'package:go_router/go_router.dart';
-
-import 'main.dart';
 import 'chatbox_by_criteria.dart';
 import 'categories.dart';
 

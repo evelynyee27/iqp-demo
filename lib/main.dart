@@ -166,38 +166,22 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController searchController = TextEditingController();
   List<School> filteredList = [];
   Set<String> selectedSchoolNames = {};
-  final List<School> _schoolList = [
-    School(
-      name: "Ashford University",
-      info:
-          "Explanation of why Ashford University fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Crestmont University",
-      info:
-          "Explanation of why Crestmont University fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Fairview University",
-      info:
-          "Explanation of why Fairview University fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Sutton College",
-      info:
-          "Explanation of why Sutton College fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Valleyview University",
-      info:
-          "Explanation of why Valleyview University fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Wakefield University",
-      info:
-          "Explanation of why Wakefield University fits the user's criteria......\n\n\n\n\n\n\n",
-    ),
+  static const List<String> schools = [
+    "Ashford University", 
+    "Crestmont University", 
+    "Fairview University", 
+    "Sutton College", 
+    "Valleyview University", 
+    "Wakefield University"
   ];
+
+  final List<School> _schoolList = schools.map((name) {
+    return School(
+      name: name,
+      info:
+          "Explanation of why $name fits the user's criteria......\n\n\n\n\n\n\n",
+    );
+  }).toList();
 
   @override
   void initState() {
@@ -238,33 +222,36 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               SizedBox(height: 5),
               // search bar
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 40,
+              Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 40,
 
-                child: SearchBar(
-                  controller: searchController,
-                  hintText: 'Search for schools',
-                  hintStyle: WidgetStateProperty.all(TextStyle(fontSize: 12)),
+                  child: SearchBar(
+                    controller: searchController,
+                    hintText: 'Search for schools',
+                    hintStyle: WidgetStateProperty.all(TextStyle(fontSize: 12)),
 
-                  elevation: WidgetStateProperty.all(1),
-                  trailing: [
-                    if (searchController.text.isNotEmpty)
-                      IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            searchController.clear();
-                            filteredList = _schoolList;
-                          });
-                        },
-                      ),
-                  ],
+                    elevation: WidgetStateProperty.all(1),
+                    trailing: [
+                      if (searchController.text.isNotEmpty)
+                        IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              searchController.clear();
+                              filteredList = _schoolList;
+                            });
+                          },
+                        ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 10),
               // search by criteria
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // by criteria
                   ElevatedButton(
@@ -308,6 +295,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // comparison chatbox
               if (isSelect)
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // comparison
                     ElevatedButton(
@@ -348,13 +336,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(127, 180, 128, 1),
-                        foregroundColor: Colors.white,
-                        side: BorderSide(color: Colors.white),
+                        backgroundColor: const Color(0xFFACE4AA),
+                        foregroundColor: const Color(0xFF1B4D3E),
+                        side: const BorderSide(color: Colors.white),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        minimumSize: const Size(0, 32+4), // height ~ Switch
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
                       ),
                       child: const Text(
                         'Start Comparing',
-
                         style: TextStyle(fontSize: 12),
                       ),
                     ),
@@ -438,13 +429,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(229, 62, 62, 1),
-                        foregroundColor: Colors.white,
-                        minimumSize: Size(50, 20),
-                        padding: EdgeInsets.zero,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
+                        backgroundColor: selectedSchoolNames.isEmpty? const Color(0xFFACE4AA) : Color.fromRGBO(229, 62, 62, 1),
+                        foregroundColor: selectedSchoolNames.isEmpty? const Color(0xFF1B4D3E) : Colors.white,
+                        side: const BorderSide(color: Colors.white),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                        minimumSize: const Size(0, 32+4), // height ~ Switch
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
                       ),
                       child: Text(
                         selectedSchoolNames.isEmpty ? "Select All" : "Clear All",

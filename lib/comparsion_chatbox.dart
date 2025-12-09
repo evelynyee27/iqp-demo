@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'router.dart';
-import 'package:flutter/services.dart';
 
 class School {
   final String name;
@@ -26,38 +23,23 @@ class ComparsionChatbox extends StatefulWidget {
 }
 
 class _ComparsionChatboxState extends State<ComparsionChatbox> {
-  final List<School> _schoolList = [
-    School(
-      name: "Ashford University",
-      info:
-          "Answer the question in regards to Ashford University......\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Crestmont University",
-      info:
-          "Answer the question in regards to Crestmont University......\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Fairview University",
-      info:
-          "Answer the question in regards to Fairview University......\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Sutton College",
-      info:
-          "Answer the question in regards to Sutton College......\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Valleyview University",
-      info:
-          "Answer the question in regards to Valleyview University......\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-    ),
-    School(
-      name: "Wakefield University",
-      info:
-          "Answer the question in regards to Wakefield University......\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-    ),
+  static const List<String> schools = [
+    "Ashford University", 
+    "Crestmont University", 
+    "Fairview University", 
+    "Sutton College", 
+    "Valleyview University", 
+    "Wakefield University"
   ];
+
+  final List<School> _schoolList = schools.map((name) {
+    return School(
+      name: name,
+      info:
+          "Answer the question in regards to $name......\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    );
+  }).toList();
+  
   late List<School> selectedSchools;
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
